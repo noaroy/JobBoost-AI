@@ -43,11 +43,23 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
+-- Fonction pour incrémenter le compteur de générations (appelée par les API routes)
+create or replace function public.increment_generations(user_id uuid)
+returns void as $$
+begin
+  update public.profiles
+  set generations_count = generations_count + 1,
+      updated_at = timezone('utc', now())
+  where id = user_id;
+end;
+$$ language plpgsql security definer;
+
 -- Historique des générations
 create table public.generations (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles on delete cascade not null,
   type text not null check (type in ('cv', 'cover_letter', 'interview_prep', 'company_suggestions')),
+  title text,
   input jsonb,
   output text,
   created_at timestamp with time zone default timezone('utc', now())
@@ -67,3 +79,9 @@ create policy "Users can insert own generations"
 create index generations_user_id_idx on public.generations (user_id);
 create index generations_type_idx on public.generations (type);
 create index generations_created_at_idx on public.generations (created_at desc);
+
+-- Permettre au service role de mettre à jour les profils (pour le webhook Stripe)
+create policy "Service role can update profiles"
+  on public.profiles for update
+  using (true)
+  with check (true);

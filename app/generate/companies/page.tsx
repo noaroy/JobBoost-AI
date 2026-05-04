@@ -2,21 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Zap, Copy, Check } from "lucide-react";
+import { ArrowLeft, Zap } from "lucide-react";
+import UpgradeWall from "@/components/UpgradeWall";
+import CopyButton from "@/components/CopyButton";
 
-const initialForm = {
-  targetJob: "",
-  location: "",
-  skills: "",
-  preferences: "",
-};
+const initialForm = { targetJob: "", location: "", skills: "", preferences: "" };
 
 export default function CompaniesPage() {
   const [form, setForm] = useState(initialForm);
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   function update(field: keyof typeof form, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -34,11 +31,9 @@ export default function CompaniesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error ?? "Erreur");
-      }
       const data = await res.json();
+      if (res.status === 403 && data.upgrade) { setShowUpgrade(true); return; }
+      if (!res.ok) throw new Error(data.error ?? "Erreur");
       setResult(data.content);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
@@ -47,14 +42,10 @@ export default function CompaniesPage() {
     }
   }
 
-  async function handleCopy() {
-    await navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
+      {showUpgrade && <UpgradeWall />}
+
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="container-wide mx-auto px-4 h-16 flex items-center gap-4">
           <Link href="/dashboard" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
@@ -81,24 +72,12 @@ export default function CompaniesPage() {
               <Field label="Poste recherché *" placeholder="Développeur React, Chef de projet, Commercial..." value={form.targetJob} onChange={(v) => update("targetJob", v)} required />
               <Field label="Localisation *" placeholder="Paris, Lyon, Bordeaux, Remote..." value={form.location} onChange={(v) => update("location", v)} required />
               <Field label="Compétences clés" placeholder="React, TypeScript, Gestion de projet, CRM..." value={form.skills} onChange={(v) => update("skills", v)} />
-              <Textarea
-                label="Vos préférences"
-                placeholder="Type d'entreprise (startup, grand groupe, PME), secteur (fintech, santé, e-commerce), culture, taille..."
-                value={form.preferences}
-                onChange={(v) => update("preferences", v)}
-                rows={3}
-              />
+              <Textarea label="Vos préférences" placeholder="Type d'entreprise (startup, grand groupe, PME), secteur (fintech, santé, e-commerce), culture, taille..." value={form.preferences} onChange={(v) => update("preferences", v)} rows={3} />
 
-              {error && (
-                <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3">{error}</div>
-              )}
+              {error && <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3">{error}</div>}
 
               <button type="submit" disabled={loading} className="w-full btn-primary btn-large disabled:opacity-60">
-                {loading ? (
-                  <><span className="animate-spin">⚡</span> Recherche en cours...</>
-                ) : (
-                  <><Zap className="w-5 h-5" /> Trouver mes entreprises cibles</>
-                )}
+                {loading ? (<><span className="animate-spin">⚡</span> Recherche en cours...</>) : (<><Zap className="w-5 h-5" /> Trouver mes entreprises cibles</>)}
               </button>
             </form>
           </div>
@@ -107,33 +86,21 @@ export default function CompaniesPage() {
             <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold text-gray-900">Vos entreprises cibles</h2>
-                {result && (
-                  <button onClick={handleCopy} className="flex items-center gap-1.5 text-sm text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
-                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                    {copied ? "Copié !" : "Copier"}
-                  </button>
-                )}
+                {result && <CopyButton text={result} />}
               </div>
+
               {!result && !loading && (
                 <div className="h-96 flex items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 text-center">
-                  <div>
-                    <div className="text-4xl mb-3">🏢</div>
-                    <p className="text-gray-400 text-sm">10 entreprises ciblées apparaîtront ici</p>
-                  </div>
+                  <div><div className="text-4xl mb-3">🏢</div><p className="text-gray-400 text-sm">10 entreprises ciblées apparaîtront ici</p></div>
                 </div>
               )}
               {loading && (
                 <div className="h-96 flex items-center justify-center bg-emerald-50 rounded-xl border border-emerald-100 text-center">
-                  <div>
-                    <div className="text-4xl mb-3 animate-bounce">🏢</div>
-                    <p className="text-emerald-600 font-medium text-sm">Recherche d'entreprises...</p>
-                  </div>
+                  <div><div className="text-4xl mb-3 animate-bounce">🏢</div><p className="text-emerald-600 font-medium text-sm">Recherche d'entreprises...</p></div>
                 </div>
               )}
               {result && (
-                <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 rounded-xl p-4 overflow-y-auto max-h-[600px]">
-                  {result}
-                </pre>
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 rounded-xl p-4 overflow-y-auto max-h-[600px]">{result}</pre>
               )}
             </div>
           </div>
