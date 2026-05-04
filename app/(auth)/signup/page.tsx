@@ -12,6 +12,22 @@ const perks = [
   "Sans carte bancaire",
 ];
 
+function translateError(msg: string): string {
+  if (msg.includes("already registered") || msg.includes("already been registered"))
+    return "Un compte existe déjà avec cette adresse email. Connectez-vous.";
+  if (msg.includes("Password should be at least"))
+    return "Le mot de passe doit contenir au moins 6 caractères.";
+  if (msg.includes("Invalid email"))
+    return "Adresse email invalide.";
+  if (msg.includes("rate limit") || msg.includes("over_email_send_rate_limit"))
+    return "Trop de tentatives. Attendez quelques minutes avant de réessayer.";
+  if (msg.includes("Email not confirmed"))
+    return "Veuillez confirmer votre email avant de vous connecter.";
+  if (msg.includes("signup_disabled"))
+    return "Les inscriptions sont temporairement désactivées.";
+  return msg;
+}
+
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -19,6 +35,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +43,7 @@ export default function SignupPage() {
     setError("");
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -35,15 +52,55 @@ export default function SignupPage() {
       },
     });
 
-    if (error) {
-      setError(error.message);
+    if (signUpError) {
+      setError(translateError(signUpError.message));
       setLoading(false);
       return;
     }
 
-    router.push("/dashboard");
+    // Session immediately available → email confirmation disabled in Supabase
+    if (data.session) {
+      router.refresh();
+      router.push("/dashboard");
+      return;
+    }
+
+    // No session → Supabase sent a confirmation email
+    setEmailSent(true);
+    setLoading(false);
   }
 
+  // ── Email sent screen ──────────────────────────────────────────────────────
+  if (emailSent) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Vérifiez votre email</h2>
+            <p className="text-gray-500 mb-2">
+              Un lien de confirmation a été envoyé à :
+            </p>
+            <p className="font-semibold text-gray-900 mb-6">{email}</p>
+            <p className="text-sm text-gray-400 mb-6">
+              Cliquez sur le lien dans l'email pour activer votre compte et accéder au dashboard.
+              Vérifiez aussi vos spams.
+            </p>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline text-sm"
+            >
+              Déjà confirmé ? Se connecter
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Signup form ────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
@@ -58,7 +115,7 @@ export default function SignupPage() {
           <p className="text-gray-500">Votre 1ère candidature professionnelle en 5 minutes</p>
         </div>
 
-        <div className="flex justify-center gap-4 mb-6 flex-wrap">
+        <div className="flex justify-center gap-3 mb-6 flex-wrap">
           {perks.map((p, i) => (
             <div key={i} className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-100 rounded-full px-3 py-1">
               <Check className="w-3 h-3" />
@@ -69,7 +126,7 @@ export default function SignupPage() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3 mb-6">
+            <div className="bg-red-50 border border-red-100 text-red-700 text-sm rounded-xl px-4 py-3 mb-6">
               {error}
             </div>
           )}

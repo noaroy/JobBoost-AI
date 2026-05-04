@@ -2,16 +2,32 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Zap, Mail, Lock, ArrowRight } from "lucide-react";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function translateError(msg: string): string {
+  if (msg.includes("Invalid login credentials") || msg.includes("invalid_credentials"))
+    return "Email ou mot de passe incorrect.";
+  if (msg.includes("Email not confirmed"))
+    return "Veuillez confirmer votre email. Vérifiez votre boîte mail (et vos spams).";
+  if (msg.includes("rate limit"))
+    return "Trop de tentatives. Attendez quelques minutes.";
+  if (msg.includes("User not found"))
+    return "Aucun compte trouvé avec cet email.";
+  return "Une erreur est survenue. Réessayez.";
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") ?? "/dashboard";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(searchParams.get("error") ?? "");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,15 +35,16 @@ export default function LoginPage() {
     setError("");
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      setError("Email ou mot de passe incorrect.");
+    if (signInError) {
+      setError(translateError(signInError.message));
       setLoading(false);
       return;
     }
 
-    router.push("/dashboard");
+    router.refresh();
+    router.push(redirectTo);
   }
 
   return (
@@ -46,7 +63,7 @@ export default function LoginPage() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3 mb-6">
+            <div className="bg-red-50 border border-red-100 text-red-700 text-sm rounded-xl px-4 py-3 mb-6">
               {error}
             </div>
           )}
@@ -62,13 +79,19 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="vous@example.com"
+                  autoComplete="email"
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-medium text-gray-700">Mot de passe</label>
+                <Link href="/forgot-password" className="text-xs text-blue-600 hover:underline">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -77,6 +100,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
               </div>
@@ -101,5 +125,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
