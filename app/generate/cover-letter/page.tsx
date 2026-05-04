@@ -1,0 +1,189 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Zap, Copy, Check } from "lucide-react";
+
+const initialForm = {
+  fullName: "",
+  targetJob: "",
+  company: "",
+  jobDescription: "",
+  experience: "",
+  motivation: "",
+};
+
+export default function CoverLetterPage() {
+  const [form, setForm] = useState(initialForm);
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
+
+  function update(field: keyof typeof form, value: string) {
+    setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setResult("");
+
+    try {
+      const res = await fetch("/api/generate/cover-letter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Erreur lors de la génération");
+      }
+      const data = await res.json();
+      setResult(data.content);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(result);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
+        <div className="container-wide mx-auto px-4 h-16 flex items-center gap-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
+            <ArrowLeft className="w-4 h-4" />
+            Dashboard
+          </Link>
+          <div className="w-px h-4 bg-gray-200" />
+          <h1 className="font-semibold text-gray-900">Générateur de lettre de motivation automatique</h1>
+        </div>
+      </header>
+
+      <main className="container-wide mx-auto px-4 py-10">
+        <div className="grid lg:grid-cols-2 gap-8">
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center">
+                <span className="text-xl">✉️</span>
+              </div>
+              <div>
+                <h2 className="font-bold text-gray-900">Informations de la candidature</h2>
+                <p className="text-sm text-gray-400">Plus c'est précis, meilleure est la lettre</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Field label="Votre nom complet *" placeholder="Marie Dupont" value={form.fullName} onChange={(v) => update("fullName", v)} required />
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Poste visé *" placeholder="Développeur React" value={form.targetJob} onChange={(v) => update("targetJob", v)} required />
+                <Field label="Entreprise *" placeholder="Spotify, Google, startup..." value={form.company} onChange={(v) => update("company", v)} required />
+              </div>
+              <Textarea
+                label="Description du poste (coller l'annonce) *"
+                placeholder="Copiez-collez ici le texte complet de l'offre d'emploi. Plus il est détaillé, meilleure sera la lettre."
+                value={form.jobDescription}
+                onChange={(v) => update("jobDescription", v)}
+                rows={5}
+                required
+              />
+              <Textarea
+                label="Votre expérience pertinente *"
+                placeholder="Décrivez brièvement votre parcours et ce qui vous rend pertinent pour CE poste."
+                value={form.experience}
+                onChange={(v) => update("experience", v)}
+                rows={3}
+                required
+              />
+              <Textarea
+                label="Vos motivations pour cette entreprise"
+                placeholder="Pourquoi cette entreprise en particulier ? Qu'est-ce qui vous attire dans leur mission, culture..."
+                value={form.motivation}
+                onChange={(v) => update("motivation", v)}
+                rows={2}
+              />
+
+              {error && (
+                <div className="bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3">{error}</div>
+              )}
+
+              <button type="submit" disabled={loading} className="w-full btn-primary btn-large disabled:opacity-60">
+                {loading ? (
+                  <><span className="animate-spin">⚡</span> Génération en cours...</>
+                ) : (
+                  <><Zap className="w-5 h-5" /> Générer ma lettre de motivation</>
+                )}
+              </button>
+            </form>
+          </div>
+
+          <div>
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-gray-900">Votre lettre générée</h2>
+                {result && (
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                    {copied ? "Copié !" : "Copier"}
+                  </button>
+                )}
+              </div>
+
+              {!result && !loading && (
+                <div className="h-96 flex items-center justify-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 text-center">
+                  <div>
+                    <div className="text-4xl mb-3">✉️</div>
+                    <p className="text-gray-400 text-sm">Votre lettre de motivation apparaîtra ici</p>
+                  </div>
+                </div>
+              )}
+              {loading && (
+                <div className="h-96 flex items-center justify-center bg-indigo-50 rounded-xl border border-indigo-100 text-center">
+                  <div>
+                    <div className="text-4xl mb-3 animate-bounce">✉️</div>
+                    <p className="text-indigo-600 font-medium text-sm">Rédaction de votre lettre...</p>
+                    <p className="text-indigo-400 text-xs mt-1">Personnalisation pour {form.company || "cette entreprise"}</p>
+                  </div>
+                </div>
+              )}
+              {result && (
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 rounded-xl p-4 overflow-y-auto max-h-[600px]">
+                  {result}
+                </pre>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function Field({ label, placeholder, value, onChange, required = false }: { label: string; placeholder: string; value: string; onChange: (v: string) => void; required?: boolean }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input type="text" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} required={required} className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+    </div>
+  );
+}
+
+function Textarea({ label, placeholder, value, onChange, rows = 3, required = false }: { label: string; placeholder: string; value: string; onChange: (v: string) => void; rows?: number; required?: boolean }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} required={required} className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-y" />
+    </div>
+  );
+}
