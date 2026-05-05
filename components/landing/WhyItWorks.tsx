@@ -20,14 +20,14 @@ const features = [
     title: "Simulation d'entretien",
     desc: "Entraînez-vous avec l'IA qui joue le recruteur. Questions STAR, feedback en temps réel, score.",
     badge: "Basic+",
-    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    badgeColor: "bg-slate-700/60 text-slate-300 border-slate-700",
   },
   {
     icon: BarChart2,
     title: "Score de candidature",
     desc: "Recevez une note /100 avec des recommandations concrètes pour améliorer votre dossier.",
     badge: "Basic+",
-    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    badgeColor: "bg-slate-700/60 text-slate-300 border-slate-700",
   },
   {
     icon: Send,
@@ -62,19 +62,17 @@ const features = [
 export default function WhyItWorks() {
   return (
     <section id="features" className="relative bg-slate-950 py-24 overflow-hidden">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container-wide mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 rounded-full bg-violet-400" />
-            <span className="text-sm text-violet-400 font-medium">Fonctionnalités</span>
+          <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="w-2 h-2 rounded-full bg-orange-400" />
+            <span className="text-sm text-orange-400 font-medium">Fonctionnalités</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
             Tout ce dont vous avez besoin<br />
-            <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
-              pour décrocher votre prochain poste
-            </span>
+            <span className="text-orange-400">pour décrocher votre prochain poste</span>
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
             Une plateforme complète — du CV à l&apos;entretien décroché, en passant par les relances et le suivi.
@@ -101,7 +99,7 @@ export default function WhyItWorks() {
         <div className="text-center">
           <p className="text-slate-500 text-sm">
             <span className="text-emerald-400">✓ Gratuit</span> pour commencer ·{" "}
-            <span className="text-blue-400">Basic</span> à 29,99€/mois ·{" "}
+            <span className="text-slate-300">Basic</span> à 29,99€/mois ·{" "}
             <span className="text-violet-400">Premium</span> à 39,99€/mois ·{" "}
             <span className="text-amber-400">Lifetime</span> à 99,99€
           </p>

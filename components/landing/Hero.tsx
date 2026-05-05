@@ -13,9 +13,8 @@ export default function Hero() {
     <section className="relative min-h-screen flex flex-col justify-center bg-slate-950 overflow-hidden pt-16">
       {/* Background glows */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-violet-600/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-blue-500/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-orange-500/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-orange-600/5 rounded-full blur-3xl" />
         {/* Grid overlay */}
         <div className="absolute inset-0 opacity-[0.015]"
           style={{ backgroundImage: "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
@@ -35,10 +34,10 @@ export default function Hero() {
         </div>
 
         {/* Main headline */}
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight mb-6">
+        <h1 className="font-display font-black text-white mb-6" style={{ fontSize: "clamp(2.75rem, 7vw, 5rem)", letterSpacing: "-0.03em", lineHeight: "1.0" }}>
           Automatise ta recherche<br />
           d'emploi et{" "}
-          <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400 bg-clip-text text-transparent bg-[size:200%] animate-[gradientShift_4s_linear_infinite]">
+          <span className="text-orange-400">
             multiplie tes chances
           </span>
         </h1>
@@ -55,7 +54,7 @@ export default function Hero() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <Link href="/signup"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold text-lg px-8 py-4 rounded-2xl hover:from-blue-500 hover:to-violet-500 transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5">
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-orange-500 text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-orange-400 transition-all shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5">
             <Zap className="w-5 h-5" />
             Commencer gratuitement
             <ArrowRight className="w-5 h-5" />
@@ -70,7 +69,7 @@ export default function Hero() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-16">
           {stats.map((s, i) => (
             <div key={i} className="bg-white/5 border border-white/8 rounded-2xl px-4 py-4">
-              <div className="text-3xl font-black text-white mb-1">{s.value}</div>
+              <div className="font-display text-3xl font-black text-white mb-1 tracking-tight">{s.value}</div>
               <div className="text-xs text-slate-400 font-medium">{s.label}</div>
             </div>
           ))}
@@ -79,7 +78,7 @@ export default function Hero() {
         {/* Dashboard preview */}
         <div className="relative max-w-3xl mx-auto">
           {/* Glow behind card */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-violet-600/20 rounded-3xl blur-xl" />
+          <div className="absolute -inset-4 bg-orange-500/10 rounded-3xl blur-xl" />
 
           <div className="relative bg-slate-900 border border-slate-700/60 rounded-2xl overflow-hidden shadow-2xl">
             {/* Fake window bar */}
@@ -109,20 +108,24 @@ export default function Hero() {
               ))}
             </div>
 
-            <div className="px-5 pb-5 grid grid-cols-2 gap-3">
+            <div className="px-5 pb-5 flex flex-col gap-2">
               {[
-                { emoji: "📄", title: "CV — Développeur React", company: "Spotify", status: "✓ Envoyé", color: "text-green-400" },
-                { emoji: "✉️", title: "Lettre — Product Manager", company: "Doctolib", status: "⚡ En cours", color: "text-blue-400" },
-                { emoji: "🎤", title: "Entretien — UX Designer", company: "Figma", status: "✓ Prêt", color: "text-green-400" },
-                { emoji: "🔄", title: "Relance — Data Analyst", company: "BNP Paribas", status: "📅 J+7", color: "text-amber-400" },
+                { type: "CV",  title: "Développeur React", company: "Spotify",    status: "Envoyé",   statusColor: "text-emerald-400 bg-emerald-500/10" },
+                { type: "LM",  title: "Product Manager",   company: "Doctolib",   status: "En cours", statusColor: "text-blue-400 bg-blue-500/10" },
+                { type: "IT",  title: "UX Designer",        company: "Figma",      status: "Prêt",     statusColor: "text-emerald-400 bg-emerald-500/10" },
+                { type: "RL",  title: "Data Analyst",       company: "BNP Paribas",status: "J+7",      statusColor: "text-amber-400 bg-amber-500/10" },
               ].map((item, i) => (
-                <div key={i} className="bg-slate-800/40 border border-slate-700/30 rounded-xl p-3 flex items-center gap-3">
-                  <span className="text-lg">{item.emoji}</span>
+                <div key={i} className="bg-slate-800/40 border border-slate-700/30 rounded-xl px-3 py-2.5 flex items-center gap-3">
+                  <div className="w-7 h-7 bg-slate-700/70 rounded-lg flex items-center justify-center text-[10px] font-bold text-slate-400 flex-shrink-0 tracking-wider">
+                    {item.type}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-medium text-white truncate">{item.title}</div>
-                    <div className="text-xs text-slate-500">{item.company}</div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">{item.company}</div>
                   </div>
-                  <span className={`text-xs font-semibold ${item.color} flex-shrink-0`}>{item.status}</span>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md flex-shrink-0 ${item.statusColor}`}>
+                    {item.status}
+                  </span>
                 </div>
               ))}
             </div>

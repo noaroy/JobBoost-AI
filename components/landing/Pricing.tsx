@@ -37,8 +37,8 @@ const plans = [
     ],
     cta: "Démarrer Basic",
     href: "/signup?plan=basic",
-    style: "bg-slate-900 border-blue-500/30",
-    ctaStyle: "bg-blue-600 hover:bg-blue-500 text-white",
+    style: "bg-slate-900 border-slate-700",
+    ctaStyle: "bg-slate-700 hover:bg-slate-600 text-white",
     featured: false,
   },
   {
@@ -57,8 +57,8 @@ const plans = [
     ],
     cta: "Passer Premium",
     href: "/signup?plan=premium",
-    style: "bg-gradient-to-b from-blue-950/80 to-violet-950/60 border-violet-500/50",
-    ctaStyle: "bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg shadow-blue-500/20",
+    style: "bg-slate-900 border-orange-500/40",
+    ctaStyle: "bg-orange-500 hover:bg-orange-400 text-white shadow-lg shadow-orange-500/20",
     featured: true,
   },
   {
@@ -84,20 +84,18 @@ export default function Pricing() {
   return (
     <section id="pricing" className="relative bg-slate-950 py-24">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-600/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-orange-500/5 rounded-full blur-3xl" />
       </div>
 
       <div className="container-wide mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-            <Zap className="w-3.5 h-3.5 text-blue-400" />
+            <Zap className="w-3.5 h-3.5 text-orange-400" />
             <span className="text-sm text-slate-300 font-medium">Tarifs</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
             Simple, transparent,{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-              sans surprise
-            </span>
+            <span className="text-orange-400">sans surprise</span>
           </h2>
           <p className="text-xl text-slate-400 max-w-xl mx-auto">
             Commencez gratuitement. Passez au niveau supérieur quand vous êtes prêt.
@@ -108,7 +106,7 @@ export default function Pricing() {
           {plans.map((plan, i) => (
             <div key={i} className={`relative rounded-2xl border p-6 flex flex-col ${plan.style}`}>
               {plan.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-violet-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-orange-500/30">
                   <Star className="w-3 h-3 fill-white" />
                   PLUS POPULAIRE
                 </div>

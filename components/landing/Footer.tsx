@@ -8,10 +8,10 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-10 mb-12">
           <div className="max-w-xs">
             <Link href="/" className="flex items-center gap-2.5 text-white font-bold text-lg mb-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <span>JobBoost <span className="text-blue-400">AI</span></span>
+              <span>JobBoost <span className="text-orange-400">AI</span></span>
             </Link>
             <p className="text-sm leading-relaxed">
               L&apos;assistant IA qui génère votre CV, lettre de motivation et prépare vos entretiens en 5 minutes.

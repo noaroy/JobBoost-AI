@@ -28,10 +28,10 @@ export default function Navbar() {
       <div className="container-wide mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 font-bold text-lg text-white">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
+          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span>JobBoost <span className="text-blue-400">AI</span></span>
+          <span className="font-display font-black tracking-tight">JobBoost <span className="text-orange-400">AI</span></span>
         </Link>
 
         {/* Desktop links */}
@@ -50,13 +50,13 @@ export default function Navbar() {
             Connexion
           </Link>
           <Link href="/signup"
-            className="btn-primary text-sm !py-2 !px-5 !rounded-lg shadow-lg shadow-blue-500/20">
+            className="btn-primary text-sm !py-2 !px-5 !rounded-lg shadow-lg shadow-orange-500/20">
             Essai gratuit →
           </Link>
         </div>
 
         {/* Mobile burger */}
-        <button className="md:hidden p-2 text-white" onClick={() => setOpen(!open)} aria-label="Menu">
+        <button className="md:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-white rounded-lg hover:bg-white/5 transition-colors" onClick={() => setOpen(!open)} aria-label={open ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={open}>
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
