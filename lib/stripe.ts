@@ -5,16 +5,33 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export const PLANS = {
-  monthly: {
-    priceId: process.env.STRIPE_PRICE_MONTHLY!,
-    name: "Accès Mensuel",
+  basic: {
+    priceId: process.env.STRIPE_PRICE_BASIC!,
+    name: "Basic",
+    price: "29,99€/mois",
+    mode: "subscription" as const,
+    tier: "basic",
+  },
+  premium: {
+    priceId: process.env.STRIPE_PRICE_PREMIUM!,
+    name: "Premium",
     price: "39,99€/mois",
     mode: "subscription" as const,
+    tier: "premium",
   },
   lifetime: {
     priceId: process.env.STRIPE_PRICE_LIFETIME!,
-    name: "Accès à Vie",
-    price: "80€",
+    name: "Lifetime",
+    price: "99,99€",
     mode: "payment" as const,
+    tier: "lifetime",
+  },
+  // Legacy alias
+  monthly: {
+    priceId: process.env.STRIPE_PRICE_BASIC!,
+    name: "Basic",
+    price: "29,99€/mois",
+    mode: "subscription" as const,
+    tier: "basic",
   },
 };

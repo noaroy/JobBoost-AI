@@ -2,58 +2,122 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import {
-  Zap, FileText, Mail, Mic, Building2,
-  BookOpen, CheckSquare, ArrowRight, LogOut,
-  User, Clock, Crown, AlertCircle,
+  Zap, FileText, Mail, Mic, Building2, BarChart2, Send, Calendar,
+  BookOpen, CheckSquare, ArrowRight, LogOut, User, Clock, Crown,
 } from "lucide-react";
-import { FREE_GENERATIONS_LIMIT } from "@/lib/plans";
+import { FREE_GENERATIONS_LIMIT, isPaid, isPremium, normalizePlan } from "@/lib/plans";
 
 const tools = [
   {
     href: "/generate/cv",
     icon: FileText,
-    title: "Générer un CV optimisé",
-    desc: "CV ATS-ready adapté à votre poste en 2 minutes",
-    color: "bg-blue-50 text-blue-600 border-blue-100",
-    tag: "Le plus populaire",
+    title: "Générateur de CV",
+    desc: "CV ATS-ready adapté à chaque offre",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10 border-blue-500/20",
+    tag: null,
+    premium: false,
   },
   {
     href: "/generate/cover-letter",
     icon: Mail,
     title: "Lettre de motivation",
-    desc: "Lettre personnalisée pour chaque offre et chaque entreprise",
-    color: "bg-indigo-50 text-indigo-600 border-indigo-100",
+    desc: "Lettre personnalisée pour chaque entreprise",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10 border-violet-500/20",
     tag: null,
+    premium: false,
   },
   {
     href: "/generate/interview",
     icon: Mic,
-    title: "Préparer mon entretien",
-    desc: "Questions clés + réponses STAR + conseils de présentation",
-    color: "bg-violet-50 text-violet-600 border-violet-100",
+    title: "Préparation entretien",
+    desc: "Questions clés + réponses STAR",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10 border-emerald-500/20",
     tag: null,
+    premium: false,
   },
   {
     href: "/generate/companies",
     icon: Building2,
     title: "Suggestions d'entreprises",
-    desc: "Trouvez les meilleures entreprises pour votre profil",
-    color: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    desc: "Trouvez les meilleures entreprises cibles",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10 border-amber-500/20",
     tag: null,
+    premium: false,
+  },
+  {
+    href: "/interview-sim",
+    icon: Mic,
+    title: "Simulation d'entretien",
+    desc: "Entraînez-vous avec un recruteur IA",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10 border-emerald-500/20",
+    tag: "Basic+",
+    premium: false,
+  },
+  {
+    href: "/score",
+    icon: BarChart2,
+    title: "Score de candidature",
+    desc: "Évaluez votre dossier /100 avec feedback",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10 border-blue-500/20",
+    tag: "Basic+",
+    premium: false,
+  },
+  {
+    href: "/follow-up",
+    icon: Send,
+    title: "Email de relance",
+    desc: "Relance professionnelle au bon moment",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10 border-amber-500/20",
+    tag: "Premium",
+    premium: true,
+  },
+  {
+    href: "/action-plan",
+    icon: Calendar,
+    title: "Plan d'action",
+    desc: "Votre coach IA pour cette semaine",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10 border-violet-500/20",
+    tag: "Premium",
+    premium: true,
+  },
+  {
+    href: "/auto-apply",
+    icon: Zap,
+    title: "Auto-Apply",
+    desc: "5 candidatures complètes en un clic",
+    color: "text-blue-400",
+    bg: "bg-gradient-to-br from-blue-500/20 to-violet-500/10 border-blue-500/20",
+    tag: "Premium",
+    premium: true,
   },
 ];
 
 const resources = [
-  { href: "/resources/templates", icon: BookOpen, title: "50 Templates de lettres", desc: "Tous secteurs confondus" },
+  { href: "/resources/templates", icon: BookOpen, title: "50 Templates de lettres", desc: "Tous secteurs" },
   { href: "/resources/interview-answers", icon: Mic, title: "20 Réponses d'entretien", desc: "Méthode STAR" },
-  { href: "/resources/checklist", icon: CheckSquare, title: "Checklist 30 jours", desc: "Plan d'action complet" },
+  { href: "/resources/checklist", icon: CheckSquare, title: "Checklist 30 jours", desc: "Plan complet" },
 ];
 
-const typeLabels: Record<string, { label: string; icon: string; color: string }> = {
-  cv: { label: "CV", icon: "📄", color: "bg-blue-50 text-blue-700" },
-  cover_letter: { label: "Lettre", icon: "✉️", color: "bg-indigo-50 text-indigo-700" },
-  interview_prep: { label: "Entretien", icon: "🎤", color: "bg-violet-50 text-violet-700" },
-  company_suggestions: { label: "Entreprises", icon: "🏢", color: "bg-emerald-50 text-emerald-700" },
+const typeLabels: Record<string, { label: string; icon: string }> = {
+  cv: { label: "CV", icon: "📄" },
+  cover_letter: { label: "Lettre", icon: "✉️" },
+  "cover-letter": { label: "Lettre", icon: "✉️" },
+  interview_prep: { label: "Entretien", icon: "🎤" },
+  interview: { label: "Entretien", icon: "🎤" },
+  company_suggestions: { label: "Entreprises", icon: "🏢" },
+  companies: { label: "Entreprises", icon: "🏢" },
+  score: { label: "Score", icon: "📊" },
+  "follow-up": { label: "Relance", icon: "📩" },
+  "action-plan": { label: "Plan", icon: "📅" },
+  "auto-apply": { label: "Auto-Apply", icon: "⚡" },
 };
 
 function formatDate(iso: string) {
@@ -80,28 +144,42 @@ export default async function DashboardPage() {
   const generations = generationsRes.data ?? [];
   const name = profile?.full_name ?? user.email?.split("@")[0] ?? "vous";
   const plan = profile?.plan ?? "free";
+  const planTier = normalizePlan(plan);
   const count = profile?.generations_count ?? 0;
-  const isFree = plan === "free";
+  const isFree = planTier === "free";
+  const paid = isPaid(plan);
+  const premium = isPremium(plan);
   const freeExhausted = isFree && count >= FREE_GENERATIONS_LIMIT;
 
+  const planBadge = {
+    free: { label: "Gratuit", color: "bg-slate-700 text-slate-300" },
+    basic: { label: "Basic", color: "bg-blue-500/20 text-blue-400 border border-blue-500/30" },
+    premium: { label: "Premium", color: "bg-violet-500/20 text-violet-400 border border-violet-500/30" },
+    lifetime: { label: "Lifetime ♾️", color: "bg-amber-500/20 text-amber-400 border border-amber-500/30" },
+  }[planTier] ?? { label: planTier, color: "bg-slate-700 text-slate-300" };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Header */}
+      <header className="bg-slate-950/90 border-b border-slate-800/50 backdrop-blur-xl sticky top-0 z-40">
         <div className="container-wide mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-gray-900">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2.5 font-bold text-lg text-white">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
               <Zap className="w-4 h-4 text-white" />
             </div>
-            JobBoost AI
+            <span>JobBoost <span className="text-blue-400">AI</span></span>
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link href="/account" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">
+            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${planBadge.color}`}>
+              {planBadge.label}
+            </span>
+            <Link href="/account" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
               <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Mon compte</span>
+              <span className="hidden sm:inline">Compte</span>
             </Link>
             <form action="/auth/signout" method="post">
-              <button type="submit" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">
+              <button type="submit" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
               </button>
@@ -111,131 +189,123 @@ export default async function DashboardPage() {
       </header>
 
       <main className="container-wide mx-auto px-4 py-10">
-        {/* Welcome + plan status */}
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">Bonjour, {name} 👋</h1>
-            <p className="text-gray-500">Que souhaitez-vous générer aujourd'hui ?</p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {plan === "lifetime" && (
-              <span className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold px-3 py-1.5 rounded-full">
-                <Crown className="w-4 h-4" />
-                Accès à vie
-              </span>
-            )}
-            {plan === "monthly" && (
-              <span className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-sm font-semibold px-3 py-1.5 rounded-full">
-                <Zap className="w-4 h-4" />
-                Abonnement actif
-              </span>
-            )}
-            {isFree && (
-              <span className="flex items-center gap-1.5 bg-gray-100 border border-gray-200 text-gray-600 text-sm font-medium px-3 py-1.5 rounded-full">
-                {count}/{FREE_GENERATIONS_LIMIT} génération{FREE_GENERATIONS_LIMIT > 1 ? "s" : ""} gratuite{FREE_GENERATIONS_LIMIT > 1 ? "s" : ""}
-              </span>
-            )}
-          </div>
+        {/* Welcome */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-black text-white mb-1">Bonjour, {name} 👋</h1>
+          <p className="text-slate-400">Que souhaitez-vous générer aujourd&apos;hui ?</p>
         </div>
 
-        {/* Upgrade banner for free users who've exhausted their limit */}
-        {freeExhausted && (
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 mb-8 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-blue-200" />
-              <div>
-                <p className="font-bold">Vous avez utilisé votre génération gratuite</p>
-                <p className="text-blue-100 text-sm mt-0.5">
-                  Passez à l'accès complet pour des candidatures illimitées + tous les bonus.
-                </p>
-              </div>
+        {/* Stats row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Générations", value: count, color: "text-blue-400", icon: "⚡" },
+            { label: "Plan actuel", value: planBadge.label, color: "text-violet-400", icon: "👑" },
+            { label: "Accès illimité", value: paid ? "Oui" : "Non", color: paid ? "text-emerald-400" : "text-slate-500", icon: "🔓" },
+            { label: "Fonc. Premium", value: premium ? "Oui" : "Non", color: premium ? "text-emerald-400" : "text-slate-500", icon: "🚀" },
+          ].map((s, i) => (
+            <div key={i} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+              <div className="text-lg mb-1">{s.icon}</div>
+              <div className={`text-xl font-black ${s.color}`}>{s.value}</div>
+              <div className="text-xs text-slate-500 mt-0.5">{s.label}</div>
             </div>
-            <Link
-              href="/account"
-              className="flex-shrink-0 bg-white text-blue-700 font-bold px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors text-sm whitespace-nowrap"
-            >
-              Passer à l'accès complet →
+          ))}
+        </div>
+
+        {/* Upgrade banners */}
+        {freeExhausted && (
+          <div className="bg-gradient-to-r from-blue-900/60 to-violet-900/40 border border-blue-700/40 rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <p className="font-bold text-white">Génération gratuite utilisée</p>
+              <p className="text-slate-300 text-sm mt-0.5">Passez à un plan payant pour des candidatures illimitées.</p>
+            </div>
+            <Link href="/account" className="flex-shrink-0 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">
+              Voir les plans →
             </Link>
           </div>
         )}
 
-        {/* Soft upgrade nudge for free users who still have 0 generations */}
-        {isFree && count === 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-8 flex items-center gap-3">
+        {!paid && !freeExhausted && (
+          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4 mb-8 flex items-center gap-3">
             <span className="text-xl">🎁</span>
-            <p className="text-sm text-amber-800">
-              <strong>1 candidature complète gratuite</strong> disponible — sans carte bancaire.{" "}
-              Commencez maintenant !
+            <p className="text-sm text-slate-300">
+              <strong className="text-white">1 candidature complète gratuite</strong> disponible. Testez la qualité sans carte bancaire.
             </p>
           </div>
         )}
 
-        {/* Main tools */}
+        {paid && !premium && (
+          <div className="bg-violet-950/40 border border-violet-800/40 rounded-2xl p-4 mb-8 flex items-center justify-between gap-3">
+            <p className="text-sm text-slate-300">
+              <span className="text-violet-400 font-semibold">Premium</span> débloque : Auto-Apply, relances automatiques, plan d&apos;action IA et plus.
+            </p>
+            <Link href="/account" className="text-violet-400 hover:text-violet-300 text-sm font-semibold whitespace-nowrap transition-colors">
+              Upgrade →
+            </Link>
+          </div>
+        )}
+
+        {/* Tools grid */}
         <div className="mb-10">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Outils IA</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {tools.map((tool, i) => (
-              <Link
-                key={i}
-                href={tool.href}
-                className={`bg-white rounded-2xl border p-6 flex items-start gap-4 group transition-all duration-200 ${
-                  freeExhausted
-                    ? "border-gray-100 opacity-60 cursor-not-allowed pointer-events-none"
-                    : "border-gray-100 hover:shadow-md hover:-translate-y-0.5"
-                }`}
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border ${tool.color}`}>
-                  <tool.icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-gray-900">{tool.title}</h3>
-                    {tool.tag && (
-                      <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium border border-blue-100">
-                        {tool.tag}
-                      </span>
-                    )}
+          <h2 className="text-base font-bold text-slate-300 mb-4">Outils IA</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tools.map((tool, i) => {
+              const locked = (tool.premium && !premium) || (freeExhausted && !paid);
+              return (
+                <Link
+                  key={i}
+                  href={locked ? "/account" : tool.href}
+                  className={`bg-slate-900/60 border border-slate-800 rounded-2xl p-5 flex items-start gap-4 group transition-all hover:border-slate-700 hover:bg-slate-900 hover:-translate-y-0.5 ${locked ? "opacity-50" : ""}`}
+                >
+                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${tool.bg}`}>
+                    <tool.icon className={`w-5 h-5 ${tool.color}`} />
                   </div>
-                  <p className="text-sm text-gray-500">{tool.desc}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-gray-300 flex-shrink-0 group-hover:text-blue-500 transition-colors mt-1" />
-              </Link>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h3 className="font-semibold text-white text-sm">{tool.title}</h3>
+                      {tool.tag && (
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${tool.tag === "Premium" ? "bg-violet-500/10 text-violet-400" : "bg-blue-500/10 text-blue-400"}`}>
+                          {tool.tag}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500">{tool.desc}</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-600 flex-shrink-0 group-hover:text-blue-400 transition-colors mt-1" />
+                </Link>
+              );
+            })}
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 mb-10">
-          {/* Generation history */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* History */}
           <div className="lg:col-span-2">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Historique des générations</h2>
+            <h2 className="text-base font-bold text-slate-300 mb-4">Historique</h2>
             {generations.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-10 text-center">
                 <div className="text-4xl mb-3">📋</div>
-                <p className="text-gray-400 font-medium">Aucune génération pour l'instant</p>
-                <p className="text-sm text-gray-300 mt-1">Vos CV, lettres et préparations apparaîtront ici</p>
+                <p className="text-slate-500 font-medium">Aucune génération pour l&apos;instant</p>
+                <p className="text-xs text-slate-600 mt-1">Vos CV, lettres et préparations apparaîtront ici</p>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl divide-y divide-slate-800/50">
                 {generations.map((g) => {
-                  const meta = typeLabels[g.type] ?? { label: g.type, icon: "📄", color: "bg-gray-50 text-gray-700" };
+                  const meta = typeLabels[g.type] ?? { label: g.type, icon: "📄" };
                   return (
                     <Link
                       key={g.id}
                       href={`/history/${g.id}`}
-                      className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors group"
+                      className="flex items-center gap-4 px-5 py-4 hover:bg-slate-800/30 transition-colors group"
                     >
                       <span className="text-xl">{meta.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {g.title ?? meta.label}
-                        </p>
-                        <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                        <p className="text-sm font-medium text-white truncate">{g.title ?? meta.label}</p>
+                        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
                           <Clock className="w-3 h-3" />
                           {formatDate(g.created_at)}
                         </p>
                       </div>
-                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${meta.color}`}>
+                      <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full flex-shrink-0">
                         {meta.label}
                       </span>
                     </Link>
@@ -245,26 +315,45 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          {/* Resources */}
-          <div>
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Ressources incluses</h2>
-            <div className="flex flex-col gap-3">
-              {resources.map((r, i) => (
-                <Link
-                  key={i}
-                  href={r.href}
-                  className="bg-white rounded-2xl border border-gray-100 p-4 hover:shadow-md transition-all duration-200 flex items-center gap-4 group"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
-                    <r.icon className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm text-gray-900">{r.title}</div>
-                    <div className="text-xs text-gray-400">{r.desc}</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0" />
+          {/* Resources + Account */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-base font-bold text-slate-300 mb-4">Ressources</h2>
+              <div className="flex flex-col gap-3">
+                {resources.map((r, i) => (
+                  <Link
+                    key={i}
+                    href={r.href}
+                    className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 hover:border-slate-700 transition-all flex items-center gap-3 group"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+                      <r.icon className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm text-white">{r.title}</div>
+                      <div className="text-xs text-slate-500">{r.desc}</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-950/40 to-violet-950/30 border border-blue-800/30 rounded-2xl p-5 text-center">
+              <Crown className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+              <p className="text-white font-bold text-sm mb-1">
+                {premium ? "Plan Premium actif" : "Passez Premium"}
+              </p>
+              <p className="text-slate-400 text-xs mb-3">
+                {premium
+                  ? "Toutes les fonctionnalités sont débloquées."
+                  : "Auto-Apply, relances IA, plan d'action et plus."}
+              </p>
+              {!premium && (
+                <Link href="/account" className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all">
+                  Voir les plans →
                 </Link>
-              ))}
+              )}
             </div>
           </div>
         </div>

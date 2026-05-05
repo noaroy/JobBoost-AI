@@ -9,8 +9,8 @@ const faqs = [
     a: "Oui, votre première candidature complète (CV + lettre + préparation entretien) est 100% gratuite, sans carte bancaire. Vous voyez la qualité avant de payer quoi que ce soit.",
   },
   {
-    q: "L'IA fait tout ? Je dois vérifier quoi ?",
-    a: "L'IA génère 95% du travail. Il vous reste à vérifier les informations personnelles, ajuster le ton si besoin, et copier votre adresse email. Tout le contenu difficile est fait automatiquement.",
+    q: "Quelle différence entre Basic, Premium et Lifetime ?",
+    a: "Basic (29,99€/mois) donne accès aux candidatures illimitées, simulation d'entretien et score. Premium (39,99€/mois) ajoute l'Auto-Apply en lot, les relances automatiques, le plan d'action IA et le job matching. Lifetime (99,99€) est l'accès Premium à vie — rentabilisé après 2-3 mois.",
   },
   {
     q: "Mes candidatures sont-elles vraiment personnalisées ?",
@@ -18,19 +18,19 @@ const faqs = [
   },
   {
     q: "Comment l'IA optimise mon CV pour les ATS ?",
-    a: "Elle intègre les mots-clés importants de l'annonce, structure le CV dans un format compatible avec les logiciels de tri automatique (ATS), et reformule vos expériences avec le vocabulaire du secteur.",
+    a: "Elle intègre les mots-clés importants de l'annonce, structure le CV dans un format compatible avec les logiciels de tri automatique (ATS), et reformule vos expériences avec le vocabulaire du secteur visé.",
   },
   {
-    q: "Quelle différence entre le plan mensuel et le paiement unique ?",
-    a: "Les fonctionnalités sont identiques. Le paiement unique à 80€ vous donne un accès à vie (rentabilisé après 2-3 mois). L'abonnement à 39,99€/mois est pratique si vous cherchez un emploi sur une courte période.",
+    q: "Qu'est-ce que la simulation d'entretien ?",
+    a: "L'IA joue le rôle du recruteur et vous pose des questions adaptées au poste (comportementales, techniques, motivationnelles). Vous répondez, et elle vous donne un score et un feedback immédiat pour vous améliorer.",
+  },
+  {
+    q: "Comment fonctionne l'Auto-Apply ?",
+    a: "Vous entrez vos informations une seule fois et collez jusqu'à 5 offres d'emploi. L'IA génère simultanément un CV et une lettre personnalisés pour chaque offre. Idéal pour envoyer beaucoup de candidatures rapidement.",
   },
   {
     q: "Puis-je obtenir un remboursement ?",
-    a: "Oui, vous disposez de 7 jours satisfait ou remboursé. Si JobBoost AI ne vous convient pas, contactez-nous par email et nous remboursons immédiatement.",
-  },
-  {
-    q: "Combien de candidatures puis-je générer avec l'accès complet ?",
-    a: "Candidatures illimitées. Vous pouvez générer autant de CV, lettres et préparations entretien que vous le souhaitez.",
+    a: "Oui, vous disposez de 7 jours satisfait ou remboursé. Si JobBoost AI ne vous convient pas, contactez-nous par email et nous remboursons immédiatement, sans question.",
   },
 ];
 
@@ -38,20 +38,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-gray-100 last:border-0">
+    <div className="border-b border-slate-800 last:border-0">
       <button
-        className="w-full flex items-center justify-between py-5 text-left"
+        className="w-full flex items-center justify-between py-5 text-left gap-4"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
-        <span className="font-semibold text-gray-900 pr-4">{q}</span>
+        <span className="font-semibold text-white text-sm md:text-base">{q}</span>
         <ChevronDown
-          className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
         <div className="pb-5">
-          <p className="text-gray-600 text-sm leading-relaxed">{a}</p>
+          <p className="text-slate-400 text-sm leading-relaxed">{a}</p>
         </div>
       )}
     </div>
@@ -60,19 +60,21 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQ() {
   return (
-    <section id="faq" className="section bg-white">
-      <div className="container-narrow mx-auto">
+    <section id="faq" className="relative bg-slate-900/40 py-24 border-t border-slate-800/50">
+      <div className="container-narrow mx-auto px-4">
         <div className="text-center mb-12">
-          <span className="badge bg-gray-100 text-gray-600 mb-4">FAQ</span>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Questions fréquentes
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
+            <span className="text-sm text-slate-300 font-medium">Questions fréquentes</span>
+          </div>
+          <h2 className="text-4xl font-black text-white mb-4">
+            Tout ce que vous devez savoir
           </h2>
-          <p className="text-gray-500 text-lg">
-            Tout ce que vous devez savoir sur JobBoost AI.
+          <p className="text-slate-400 text-lg">
+            Des questions ? Voici les réponses.
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-8">
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl px-6 md:px-8">
           {faqs.map((faq, i) => (
             <FAQItem key={i} q={faq.q} a={faq.a} />
           ))}

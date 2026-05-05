@@ -1,74 +1,110 @@
-import { Target, MessageSquare, Zap } from "lucide-react";
+import { FileText, Mail, Mic, BarChart2, Send, Map, Bot, Bell } from "lucide-react";
 
-const reasons = [
+const features = [
   {
-    icon: Target,
-    title: "Ciblage précis de l'offre",
-    desc: "L'IA analyse chaque mot de l'annonce et adapte votre candidature avec exactement le vocabulaire que cherche le recruteur. Résultat : vous semblez avoir été fait pour ce poste.",
-    color: "bg-blue-50 text-blue-600",
+    icon: FileText,
+    title: "Générateur de CV",
+    desc: "CV optimisé ATS en 30 secondes. Mots-clés intégrés, structure parfaite, adapté à chaque offre.",
+    badge: "Gratuit",
+    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   },
   {
-    icon: MessageSquare,
-    title: "Message clair et percutant",
-    desc: "Fini les candidatures floues. Chaque phrase a un but précis : capter l'attention, démontrer la valeur, provoquer un appel. Structure éprouvée sur des milliers de candidatures réussies.",
-    color: "bg-indigo-50 text-indigo-600",
+    icon: Mail,
+    title: "Lettre de motivation",
+    desc: "Chaque lettre est unique, personnalisée pour l'entreprise et le poste. Ton professionnel et humain.",
+    badge: "Gratuit",
+    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   },
   {
-    icon: Zap,
-    title: "Optimisation ATS intelligente",
-    desc: "80% des CV sont rejetés avant d'être lus par un humain. Notre IA intègre automatiquement les mots-clés critiques pour passer les filtres et atterrir sur le bureau du recruteur.",
-    color: "bg-violet-50 text-violet-600",
+    icon: Mic,
+    title: "Simulation d'entretien",
+    desc: "Entraînez-vous avec l'IA qui joue le recruteur. Questions STAR, feedback en temps réel, score.",
+    badge: "Basic+",
+    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  },
+  {
+    icon: BarChart2,
+    title: "Score de candidature",
+    desc: "Recevez une note /100 avec des recommandations concrètes pour améliorer votre dossier.",
+    badge: "Basic+",
+    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  },
+  {
+    icon: Send,
+    title: "Relance automatique",
+    desc: "L'IA rédige vos emails de relance au bon moment avec le bon ton. Plus jamais d'opportunité perdue.",
+    badge: "Premium",
+    badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  },
+  {
+    icon: Bot,
+    title: "Auto-Apply en lot",
+    desc: "Générez des candidatures complètes pour 5 offres d'un coup. Postulez à 50 offres par semaine.",
+    badge: "Premium",
+    badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  },
+  {
+    icon: Map,
+    title: "Plan d'action quotidien",
+    desc: "Votre coach IA analyse vos stats et vous donne un plan précis pour cette semaine.",
+    badge: "Premium",
+    badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  },
+  {
+    icon: Bell,
+    title: "Dashboard intelligent",
+    desc: "Taux de réponse, score moyen, relances à faire — tout votre pipeline de candidature en un coup d'œil.",
+    badge: "Premium",
+    badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
   },
 ];
 
 export default function WhyItWorks() {
   return (
-    <section className="section bg-gray-950 text-white">
-      <div className="container-wide mx-auto">
-        <div className="text-center mb-14">
-          <span className="badge bg-blue-500/10 text-blue-400 mb-4">Pourquoi ça marche</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            L'IA qui comprend{" "}
-            <span className="text-blue-400">ce que veulent les recruteurs</span>
+    <section id="features" className="relative bg-slate-950 py-24 overflow-hidden">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="container-wide mx-auto px-4 relative z-10">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="w-2 h-2 rounded-full bg-violet-400" />
+            <span className="text-sm text-violet-400 font-medium">Fonctionnalités</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
+            Tout ce dont vous avez besoin<br />
+            <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+              pour décrocher votre prochain poste
+            </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            JobBoost AI ne copie pas un template. Il analyse votre profil, l'offre, et l'entreprise pour créer une candidature sur-mesure.
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+            Une plateforme complète — du CV à l&apos;entretien décroché, en passant par les relances et le suivi.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-14">
-          {reasons.map((r, i) => (
-            <div key={i} className="bg-gray-900 rounded-2xl p-8 border border-gray-800 hover:border-gray-700 transition-colors">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${r.color}`}>
-                <r.icon className="w-6 h-6" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {features.map((f, i) => (
+            <div key={i} className="group bg-slate-900/60 border border-slate-800 rounded-2xl p-5 hover:border-slate-700 hover:bg-slate-900 transition-all hover:-translate-y-0.5">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center">
+                  <f.icon className="w-5 h-5 text-slate-300" />
+                </div>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${f.badgeColor}`}>
+                  {f.badge}
+                </span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">{r.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{r.desc}</p>
+              <h3 className="font-bold text-white mb-2 text-sm">{f.title}</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
-            <div className="text-lg font-bold text-red-400 mb-3">❌ Sans JobBoost AI</div>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>• 2-4h par candidature</li>
-              <li>• CV générique refusé par les ATS</li>
-              <li>• Lettre identique pour toutes les offres</li>
-              <li>• 2-3 candidatures max par semaine</li>
-              <li>• 3 mois de recherche en moyenne</li>
-            </ul>
-          </div>
-          <div className="bg-gradient-to-br from-blue-900/40 to-indigo-900/40 rounded-2xl p-6 border border-blue-700/50">
-            <div className="text-lg font-bold text-green-400 mb-3">✅ Avec JobBoost AI</div>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li>• 5 minutes par candidature complète</li>
-              <li>• CV optimisé ATS pour chaque poste</li>
-              <li>• Lettre 100% personnalisée à chaque offre</li>
-              <li>• 10-20 candidatures par jour si besoin</li>
-              <li>• Entretien décroché en quelques semaines</li>
-            </ul>
-          </div>
+        <div className="text-center">
+          <p className="text-slate-500 text-sm">
+            <span className="text-emerald-400">✓ Gratuit</span> pour commencer ·{" "}
+            <span className="text-blue-400">Basic</span> à 29,99€/mois ·{" "}
+            <span className="text-violet-400">Premium</span> à 39,99€/mois ·{" "}
+            <span className="text-amber-400">Lifetime</span> à 99,99€
+          </p>
         </div>
       </div>
     </section>

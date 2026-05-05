@@ -1,64 +1,79 @@
+import Link from "next/link";
+import { BookOpen, Mic, CheckSquare } from "lucide-react";
+
 const bonuses = [
   {
-    emoji: "📚",
+    icon: BookOpen,
     title: "50 Templates de Lettres",
-    value: "Valeur : 49€",
-    desc: "50 lettres de motivation rédigées par des experts RH pour tous les secteurs : tech, commerce, santé, finance, créatif...",
-    tag: "OFFERT",
+    value: "49€",
+    desc: "50 lettres rédigées par des experts RH pour tous les secteurs : tech, commerce, santé, finance, créatif...",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10 border-blue-500/20",
   },
   {
-    emoji: "🎤",
+    icon: Mic,
     title: "20 Réponses d'Entretien",
-    value: "Valeur : 39€",
-    desc: "Les 20 questions les plus posées en entretien avec des réponses modèles percutantes rédigées avec la méthode STAR.",
-    tag: "OFFERT",
+    value: "39€",
+    desc: "Les 20 questions les plus posées en entretien avec des réponses modèles percutantes (méthode STAR).",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10 border-violet-500/20",
   },
   {
-    emoji: "✅",
-    title: "Checklist Job en 30 jours",
-    value: "Valeur : 19€",
+    icon: CheckSquare,
+    title: "Checklist 30 Jours",
+    value: "19€",
     desc: "Un plan d'action quotidien pour trouver un emploi en 30 jours. Quoi faire chaque matin pour maximiser vos chances.",
-    tag: "OFFERT",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10 border-amber-500/20",
   },
 ];
 
 export default function Bonuses() {
   return (
-    <section className="section bg-gradient-to-b from-amber-50 to-white">
-      <div className="container-wide mx-auto">
+    <section className="relative bg-slate-900/40 py-24 border-y border-slate-800/50">
+      <div className="container-wide mx-auto px-4">
         <div className="text-center mb-14">
-          <span className="badge bg-amber-100 text-amber-700 border border-amber-200 mb-4">🎁 Bonus exclusifs</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Inclus gratuitement{" "}
-            <span className="text-amber-500">avec votre accès</span>
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="text-amber-400 text-sm">🎁</span>
+            <span className="text-sm text-amber-400 font-medium">Bonus exclusifs</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
+            107€ de ressources offerts<br />
+            <span className="text-amber-400">avec votre accès</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-xl mx-auto">
-            En plus de l'IA, vous obtenez ces ressources immédiatement — une valeur totale de <strong>107€ offerts</strong>.
+          <p className="text-xl text-slate-400 max-w-xl mx-auto">
+            En plus de l&apos;IA, ces ressources sont disponibles immédiatement dans votre dashboard.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <div className="grid md:grid-cols-3 gap-5 mb-10 max-w-4xl mx-auto">
           {bonuses.map((b, i) => (
-            <div key={i} className="bg-white rounded-2xl border-2 border-amber-100 p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 relative overflow-hidden">
-              <div className="absolute top-4 right-4 bg-amber-500 text-white text-xs font-black px-2 py-1 rounded-md">
-                {b.tag}
+            <div key={i} className={`relative bg-slate-900 border ${b.bg} rounded-2xl p-6 overflow-hidden`}>
+              <div className="absolute top-4 right-4 bg-amber-500 text-white text-xs font-black px-2 py-0.5 rounded-md">
+                OFFERT
               </div>
-              <div className="text-4xl mb-4">{b.emoji}</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{b.title}</h3>
-              <p className="text-xs text-amber-600 font-semibold mb-3">{b.value} — Inclus gratuitement</p>
-              <p className="text-gray-500 text-sm leading-relaxed">{b.desc}</p>
+              <div className={`w-10 h-10 rounded-xl ${b.bg} border flex items-center justify-center mb-4`}>
+                <b.icon className={`w-5 h-5 ${b.color}`} />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-1">{b.title}</h3>
+              <p className="text-xs text-amber-400 font-semibold mb-3">Valeur : {b.value} — Inclus gratuitement</p>
+              <p className="text-slate-400 text-sm leading-relaxed">{b.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="bg-amber-500 rounded-2xl p-6 text-center text-white">
-          <p className="text-2xl font-black mb-1">
-            Valeur totale des bonus : <span className="line-through opacity-60">107€</span>{" "}
-            <span className="text-amber-100">→ 0€ inclus avec votre accès</span>
+        <div className="max-w-4xl mx-auto bg-gradient-to-r from-amber-950/40 to-amber-900/20 border border-amber-900/40 rounded-2xl p-6 text-center">
+          <p className="text-xl font-bold text-white mb-2">
+            Valeur totale des bonus :{" "}
+            <span className="line-through text-slate-500">107€</span>{" "}
+            <span className="text-amber-400">→ 0€ inclus avec votre accès</span>
           </p>
-          <p className="text-amber-100 text-sm">
-            Ces ressources sont disponibles dans votre dashboard dès la création de votre compte.
+          <p className="text-slate-400 text-sm mb-4">
+            Disponibles immédiatement dans votre dashboard dès la création du compte.
           </p>
+          <Link href="/signup" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+            Accéder aux bonus gratuitement →
+          </Link>
         </div>
       </div>
     </section>

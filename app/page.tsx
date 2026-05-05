@@ -3,12 +3,12 @@ import Hero from "@/components/landing/Hero";
 import Problem from "@/components/landing/Problem";
 import Solution from "@/components/landing/Solution";
 import HowItWorks from "@/components/landing/HowItWorks";
-import Results from "@/components/landing/Results";
 import WhyItWorks from "@/components/landing/WhyItWorks";
+import Results from "@/components/landing/Results";
 import Bonuses from "@/components/landing/Bonuses";
 import Pricing from "@/components/landing/Pricing";
-import FinalCTA from "@/components/landing/FinalCTA";
 import FAQ from "@/components/landing/FAQ";
+import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 
 export default function LandingPage() {
@@ -20,8 +20,8 @@ export default function LandingPage() {
         <Problem />
         <Solution />
         <HowItWorks />
-        <Results />
         <WhyItWorks />
+        <Results />
         <Bonuses />
         <Pricing />
         <FAQ />

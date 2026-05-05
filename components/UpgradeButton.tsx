@@ -9,7 +9,7 @@ export default function UpgradeButton({
   label,
   primary = false,
 }: {
-  plan: "monthly" | "lifetime";
+  plan: "basic" | "premium" | "monthly" | "lifetime";
   label: string;
   primary?: boolean;
 }) {
@@ -39,12 +39,12 @@ export default function UpgradeButton({
       disabled={loading}
       className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all disabled:opacity-60 ${
         primary
-          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
-          : "bg-gray-900 text-white hover:bg-gray-800"
+          ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/20"
+          : "bg-slate-700 text-white hover:bg-slate-600"
       }`}
     >
       {loading ? (
-        <span className="animate-spin text-base">⚡</span>
+        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
       ) : (
         <Zap className="w-4 h-4" />
       )}
