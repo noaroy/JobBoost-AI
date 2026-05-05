@@ -58,14 +58,12 @@ export default function SignupPage() {
       return;
     }
 
-    // Session immediately available → email confirmation disabled in Supabase
     if (data.session) {
       router.refresh();
       router.push("/dashboard");
       return;
     }
 
-    // No session → Supabase sent a confirmation email
     setEmailSent(true);
     setLoading(false);
   }
@@ -73,24 +71,24 @@ export default function SignupPage() {
   // ── Email sent screen ──────────────────────────────────────────────────────
   if (emailSent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-blue-600" />
+          <div className="bg-slate-900 rounded-2xl border border-slate-800 p-8 text-center">
+            <div className="w-16 h-16 bg-orange-500/10 border border-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail aria-hidden="true" className="w-8 h-8 text-orange-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Vérifiez votre email</h2>
-            <p className="text-gray-500 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">Vérifiez votre email</h2>
+            <p className="text-slate-400 mb-2">
               Un lien de confirmation a été envoyé à :
             </p>
-            <p className="font-semibold text-gray-900 mb-6">{email}</p>
-            <p className="text-sm text-gray-400 mb-6">
-              Cliquez sur le lien dans l'email pour activer votre compte et accéder au dashboard.
+            <p className="font-semibold text-white mb-6">{email}</p>
+            <p className="text-sm text-slate-500 mb-6">
+              Cliquez sur le lien dans l&apos;email pour activer votre compte et accéder au dashboard.
               Vérifiez aussi vos spams.
             </p>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline text-sm"
+              className="inline-flex items-center gap-2 text-orange-400 font-semibold hover:text-orange-300 text-sm"
             >
               Déjà confirmé ? Se connecter
             </Link>
@@ -102,70 +100,70 @@ export default function SignupPage() {
 
   // ── Signup form ────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-900 font-bold text-xl mb-6">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-white font-bold text-xl mb-6">
+            <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             JobBoost AI
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Commencer gratuitement</h1>
-          <p className="text-gray-500">Votre 1ère candidature professionnelle en 5 minutes</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Commencer gratuitement</h1>
+          <p className="text-slate-400">Votre 1ère candidature professionnelle en 5 minutes</p>
         </div>
 
         <div className="flex justify-center gap-3 mb-6 flex-wrap">
           {perks.map((p, i) => (
-            <div key={i} className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-100 rounded-full px-3 py-1">
-              <Check className="w-3 h-3" />
+            <div key={i} className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
+              <Check aria-hidden="true" className="w-3 h-3" />
               {p}
             </div>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-8">
           {error && (
-            <div className="bg-red-50 border border-red-100 text-red-700 text-sm rounded-xl px-4 py-3 mb-6">
+            <div role="alert" aria-live="polite" className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-6">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Prénom et nom</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">Prénom et nom</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <User aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Marie Dupont"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Mail aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="marie@example.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">Mot de passe</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Lock aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="password"
                   required
@@ -173,7 +171,7 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimum 6 caractères"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-500"
                 />
               </div>
             </div>
@@ -181,23 +179,23 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary btn-large disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 text-lg rounded-2xl bg-orange-500 text-white font-bold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Création du compte..." : "Créer mon compte gratuit"}
               {!loading && <ArrowRight className="w-5 h-5" />}
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-400 mt-4">
+          <p className="text-center text-xs text-slate-600 mt-4">
             En vous inscrivant, vous acceptez nos{" "}
-            <Link href="/terms" className="underline hover:text-gray-600">conditions d'utilisation</Link>{" "}
+            <Link href="/terms" className="text-slate-500 underline hover:text-slate-300">conditions d&apos;utilisation</Link>{" "}
             et notre{" "}
-            <Link href="/privacy" className="underline hover:text-gray-600">politique de confidentialité</Link>.
+            <Link href="/privacy" className="text-slate-500 underline hover:text-slate-300">politique de confidentialité</Link>.
           </p>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-slate-500 mt-6">
             Déjà un compte ?{" "}
-            <Link href="/login" className="text-blue-600 font-semibold hover:underline">
+            <Link href="/login" className="text-orange-400 font-semibold hover:text-orange-300">
               Se connecter
             </Link>
           </p>

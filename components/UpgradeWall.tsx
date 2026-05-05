@@ -19,8 +19,8 @@ export default function UpgradeWall({ onClose }: Props) {
           </button>
         )}
 
-        <div className="w-14 h-14 bg-blue-500/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Lock className="w-7 h-7 text-blue-400" />
+        <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <Lock aria-hidden="true" className="w-7 h-7 text-orange-400" />
         </div>
         <h2 className="text-2xl font-black text-white mb-2">
           Limite gratuite atteinte
@@ -30,7 +30,7 @@ export default function UpgradeWall({ onClose }: Props) {
           <strong className="text-white"> illimitées</strong>.
         </p>
 
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6 text-left space-y-2">
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 mb-6 text-left space-y-2">
           {[
             "CV + lettre + entretien illimités",
             "Simulation d'entretien IA",
@@ -48,7 +48,7 @@ export default function UpgradeWall({ onClose }: Props) {
         <div className="flex flex-col gap-3">
           <Link
             href="/account"
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-500/20"
+            className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20"
           >
             <Zap className="w-5 h-5" />
             Voir les plans →

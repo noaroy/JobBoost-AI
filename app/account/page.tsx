@@ -133,7 +133,7 @@ export default async function AccountPage({
               <span className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full ${
                 planTier === "lifetime" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                 : planTier === "premium" ? "bg-violet-500/20 text-violet-400 border border-violet-500/30"
-                : planTier === "basic" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                : planTier === "basic" ? "bg-slate-700/50 text-slate-300 border border-slate-600"
                 : "bg-slate-700 text-slate-300"
               }`}>
                 {(planTier === "lifetime" || planTier === "premium") && <Crown className="w-3.5 h-3.5" />}
@@ -158,7 +158,7 @@ export default async function AccountPage({
         {!premium && (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-5 h-5 text-blue-400" />
+              <Zap className="w-5 h-5 text-orange-400" />
               <h2 className="font-bold text-white text-lg">
                 {isFree ? "Passer à un plan payant" : "Passer Premium"}
               </h2>
@@ -180,12 +180,12 @@ export default async function AccountPage({
                     key={p.key}
                     className={`relative rounded-2xl p-5 flex flex-col ${
                       p.highlight
-                        ? "bg-gradient-to-b from-blue-950/80 to-violet-950/60 border-2 border-violet-500/50"
+                        ? "bg-slate-800/60 border-2 border-orange-500/40"
                         : "border border-slate-700 bg-slate-800/40"
                     }`}
                   >
                     {p.highlight && (
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-orange-500/30">
                         <Star className="w-3 h-3 fill-white" /> POPULAIRE
                       </div>
                     )}
@@ -215,7 +215,7 @@ export default async function AccountPage({
         )}
 
         {premium && (
-          <div className="bg-gradient-to-br from-violet-950/40 to-blue-950/30 border border-violet-800/30 rounded-2xl p-6 text-center">
+          <div className="bg-slate-900/60 border border-amber-500/20 rounded-2xl p-6 text-center">
             <Crown className="w-8 h-8 text-amber-400 mx-auto mb-3" />
             <h2 className="font-bold text-white text-lg mb-1">Vous avez accès à tout</h2>
             <p className="text-slate-400 text-sm">

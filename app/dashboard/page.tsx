@@ -13,8 +13,8 @@ const tools = [
     icon: FileText,
     title: "Générateur de CV",
     desc: "CV ATS-ready adapté à chaque offre",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10 border-blue-500/20",
+    color: "text-orange-400",
+    bg: "bg-orange-500/10 border-orange-500/20",
     tag: null,
     premium: false,
   },
@@ -63,8 +63,8 @@ const tools = [
     icon: BarChart2,
     title: "Score de candidature",
     desc: "Évaluez votre dossier /100 avec feedback",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10 border-blue-500/20",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10 border-emerald-500/20",
     tag: "Basic+",
     premium: false,
   },
@@ -93,8 +93,8 @@ const tools = [
     icon: Zap,
     title: "Auto-Apply",
     desc: "5 candidatures complètes en un clic",
-    color: "text-blue-400",
-    bg: "bg-gradient-to-br from-blue-500/20 to-violet-500/10 border-blue-500/20",
+    color: "text-orange-400",
+    bg: "bg-orange-500/10 border-orange-500/20",
     tag: "Premium",
     premium: true,
   },
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
 
   const planBadge = {
     free: { label: "Gratuit", color: "bg-slate-700 text-slate-300" },
-    basic: { label: "Basic", color: "bg-blue-500/20 text-blue-400 border border-blue-500/30" },
+    basic: { label: "Basic", color: "bg-slate-700/50 text-slate-300 border border-slate-600" },
     premium: { label: "Premium", color: "bg-violet-500/20 text-violet-400 border border-violet-500/30" },
     lifetime: { label: "Lifetime ♾️", color: "bg-amber-500/20 text-amber-400 border border-amber-500/30" },
   }[planTier] ?? { label: planTier, color: "bg-slate-700 text-slate-300" };
@@ -164,22 +164,22 @@ export default async function DashboardPage() {
       <header className="bg-slate-950/90 border-b border-slate-800/50 backdrop-blur-xl sticky top-0 z-40">
         <div className="container-wide mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 font-bold text-lg text-white">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-violet-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
               <Zap className="w-4 h-4 text-white" />
             </div>
-            <span>JobBoost <span className="text-blue-400">AI</span></span>
+            <span>JobBoost <span className="text-orange-400">AI</span></span>
           </Link>
 
           <div className="flex items-center gap-4">
             <span className={`text-xs font-semibold px-3 py-1 rounded-full ${planBadge.color}`}>
               {planBadge.label}
             </span>
-            <Link href="/account" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
+            <Link href="/account" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors min-h-[44px] px-2">
               <User className="w-4 h-4" />
               <span className="hidden sm:inline">Compte</span>
             </Link>
             <form action="/auth/signout" method="post">
-              <button type="submit" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
+              <button type="submit" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors min-h-[44px] px-2">
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
               </button>
@@ -196,29 +196,29 @@ export default async function DashboardPage() {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           {[
-            { label: "Générations", value: count, color: "text-blue-400", icon: "⚡" },
+            { label: "Générations", value: count, color: "text-orange-400", icon: "⚡" },
             { label: "Plan actuel", value: planBadge.label, color: "text-violet-400", icon: "👑" },
             { label: "Accès illimité", value: paid ? "Oui" : "Non", color: paid ? "text-emerald-400" : "text-slate-500", icon: "🔓" },
             { label: "Fonc. Premium", value: premium ? "Oui" : "Non", color: premium ? "text-emerald-400" : "text-slate-500", icon: "🚀" },
           ].map((s, i) => (
-            <div key={i} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
-              <div className="text-lg mb-1">{s.icon}</div>
-              <div className={`text-xl font-black ${s.color}`}>{s.value}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{s.label}</div>
+            <div key={i} className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 sm:p-4">
+              <div className="text-base sm:text-lg mb-1">{s.icon}</div>
+              <div className={`text-lg sm:text-xl font-black truncate ${s.color}`}>{s.value}</div>
+              <div className="text-xs text-slate-500 mt-0.5 leading-tight">{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Upgrade banners */}
         {freeExhausted && (
-          <div className="bg-gradient-to-r from-blue-900/60 to-violet-900/40 border border-blue-700/40 rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="font-bold text-white">Génération gratuite utilisée</p>
               <p className="text-slate-300 text-sm mt-0.5">Passez à un plan payant pour des candidatures illimitées.</p>
             </div>
-            <Link href="/account" className="flex-shrink-0 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">
+            <Link href="/account" className="flex-shrink-0 bg-orange-500 hover:bg-orange-400 text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">
               Voir les plans →
             </Link>
           </div>
@@ -234,11 +234,11 @@ export default async function DashboardPage() {
         )}
 
         {paid && !premium && (
-          <div className="bg-violet-950/40 border border-violet-800/40 rounded-2xl p-4 mb-8 flex items-center justify-between gap-3">
+          <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-4 mb-8 flex items-center justify-between gap-3">
             <p className="text-sm text-slate-300">
-              <span className="text-violet-400 font-semibold">Premium</span> débloque : Auto-Apply, relances automatiques, plan d&apos;action IA et plus.
+              <span className="text-orange-400 font-semibold">Premium</span> débloque : Auto-Apply, relances automatiques, plan d&apos;action IA et plus.
             </p>
-            <Link href="/account" className="text-violet-400 hover:text-violet-300 text-sm font-semibold whitespace-nowrap transition-colors">
+            <Link href="/account" className="text-orange-400 hover:text-orange-300 text-sm font-semibold whitespace-nowrap transition-colors">
               Upgrade →
             </Link>
           </div>
@@ -263,14 +263,14 @@ export default async function DashboardPage() {
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="font-semibold text-white text-sm">{tool.title}</h3>
                       {tool.tag && (
-                        <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${tool.tag === "Premium" ? "bg-violet-500/10 text-violet-400" : "bg-blue-500/10 text-blue-400"}`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${tool.tag === "Premium" ? "bg-orange-500/10 text-orange-400" : "bg-slate-700/60 text-slate-300"}`}>
                           {tool.tag}
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-slate-500">{tool.desc}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-600 flex-shrink-0 group-hover:text-blue-400 transition-colors mt-1" />
+                  <ArrowRight className="w-4 h-4 text-slate-600 flex-shrink-0 group-hover:text-orange-400 transition-colors mt-1" />
                 </Link>
               );
             })}
@@ -333,13 +333,13 @@ export default async function DashboardPage() {
                       <div className="font-medium text-sm text-white">{r.title}</div>
                       <div className="text-xs text-slate-500">{r.desc}</div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-orange-400 transition-colors flex-shrink-0" />
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-950/40 to-violet-950/30 border border-blue-800/30 rounded-2xl p-5 text-center">
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 text-center">
               <Crown className="w-6 h-6 text-amber-400 mx-auto mb-2" />
               <p className="text-white font-bold text-sm mb-1">
                 {premium ? "Plan Premium actif" : "Passez Premium"}
@@ -350,7 +350,7 @@ export default async function DashboardPage() {
                   : "Auto-Apply, relances IA, plan d'action et plus."}
               </p>
               {!premium && (
-                <Link href="/account" className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all">
+                <Link href="/account" className="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all">
                   Voir les plans →
                 </Link>
               )}

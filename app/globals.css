@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +6,56 @@
 
 @layer base {
   :root {
-    --brand: #3b82f6;
-    --brand-dark: #1e40af;
+    --brand:      oklch(0.73 0.20 55);
+    --brand-dark: oklch(0.65 0.18 55);
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    @apply font-sans antialiased bg-white text-gray-900;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply font-sans antialiased bg-slate-950 text-slate-100;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   * { -webkit-font-smoothing: antialiased; }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Archivo", system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
 }
 
 @layer components {
   /* ── Buttons ──────────────────────────── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl
-           bg-blue-600 text-white font-semibold text-base
+           bg-orange-500 text-white font-semibold text-base
            transition-all duration-200
-           hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5
+           hover:bg-orange-400 hover:shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5
            active:translate-y-0
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-slate-950;
   }
   .btn-primary-dark {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl
-           bg-white text-blue-700 font-semibold text-base
+           bg-white text-slate-900 font-semibold text-base
            transition-all duration-200
-           hover:bg-blue-50 hover:shadow-lg hover:-translate-y-0.5
-           focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600;
+           hover:bg-slate-100 hover:shadow-lg hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl
-           border-2 border-blue-600 text-blue-600 font-semibold text-base
-           transition-all duration-200 hover:bg-blue-50
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+           border-2 border-orange-500 text-orange-400 font-semibold text-base
+           transition-all duration-200 hover:bg-orange-500/10
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-slate-950;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
-           text-gray-500 font-medium text-sm transition-all duration-150
-           hover:text-gray-900 hover:bg-gray-100;
+           text-slate-400 font-medium text-sm transition-all duration-150
+           hover:text-slate-100 hover:bg-slate-800;
   }
   .btn-large { @apply px-8 py-4 text-lg rounded-2xl; }
 
@@ -69,36 +78,46 @@
     @apply bg-slate-900 rounded-2xl border border-slate-800 p-6;
   }
   .card-glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6;
+    @apply bg-white/5 border border-white/10 rounded-2xl p-6;
   }
   .card-premium {
-    @apply bg-gradient-to-br from-slate-900 to-blue-950
-           border border-blue-800/40 rounded-2xl p-6 shadow-xl shadow-blue-900/20;
+    @apply bg-slate-900 border border-orange-500/20 rounded-2xl p-6 shadow-xl shadow-orange-500/10;
   }
 
   /* ── Typography ───────────────────────── */
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent;
-  }
-  .gradient-text-warm {
-    @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
+  .accent-text {
+    @apply text-orange-400;
   }
   .heading-xl {
-    @apply text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight;
+    font-family: "Archivo", system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    font-size: clamp(2.75rem, 6vw, 4.5rem);
   }
   .heading-lg {
-    @apply text-4xl md:text-5xl font-bold tracking-tight leading-tight;
+    font-family: "Archivo", system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .heading-sm {
+    font-family: "Archivo", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
 
   /* ── Badges ───────────────────────────── */
   .badge {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
   }
-  .badge-blue  { @apply badge bg-blue-50 text-blue-700 border border-blue-100; }
-  .badge-dark  { @apply badge bg-blue-500/10 text-blue-300 border border-blue-500/20; }
-  .badge-green { @apply badge bg-green-50 text-green-700 border border-green-100; }
-  .badge-amber { @apply badge bg-amber-50 text-amber-700 border border-amber-200; }
-  .badge-violet{ @apply badge bg-violet-50 text-violet-700 border border-violet-100; }
+  .badge-blue  { @apply badge bg-orange-500/10 text-orange-400 border border-orange-500/20; }
+  .badge-dark  { @apply badge bg-slate-800 text-slate-300 border border-slate-700; }
+  .badge-green { @apply badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20; }
+  .badge-amber { @apply badge bg-amber-500/10 text-amber-400 border border-amber-500/20; }
+  .badge-violet{ @apply badge bg-violet-500/10 text-violet-400 border border-violet-500/20; }
 
   /* ── Misc ─────────────────────────────── */
   .divider { @apply h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent; }
@@ -118,18 +137,18 @@
 
   /* ── Input ────────────────────────────── */
   .input {
-    @apply w-full px-4 py-3 border border-gray-200 rounded-xl text-sm
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-           placeholder:text-gray-400 transition-colors;
+    @apply w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
+           placeholder:text-slate-500 transition-colors;
   }
   .input-dark {
     @apply w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
            placeholder:text-slate-500 transition-colors;
   }
   .textarea {
-    @apply w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-y
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-           placeholder:text-gray-400 transition-colors;
+    @apply w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white resize-y
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
+           placeholder:text-slate-500 transition-colors;
   }
 }

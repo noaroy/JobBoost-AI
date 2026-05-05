@@ -10,18 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#eff6ff", 100: "#dbeafe", 200: "#bfdbfe", 300: "#93c5fd",
-          400: "#60a5fa", 500: "#3b82f6", 600: "#2563eb", 700: "#1d4ed8",
-          800: "#1e40af", 900: "#1e3a8a",
+          50:  "#fff7ed", 100: "#ffedd5", 200: "#fed7aa", 300: "#fdba74",
+          400: "#fb923c", 500: "#f97316", 600: "#ea580c", 700: "#c2410c",
+          800: "#9a3412", 900: "#7c2d12",
         },
       },
-      fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+      fontFamily: {
+        sans:    ["Figtree", "system-ui", "sans-serif"],
+        display: ["Archivo", "system-ui", "sans-serif"],
+      },
       backgroundImage: {
-        "hero-gradient": "radial-gradient(ellipse 80% 60% at 50% -20%, #1e3a8a55, transparent)",
-        "card-shine": "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%)",
+        "hero-gradient": "radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.73 0.20 55 / 0.12), transparent)",
+        "card-shine": "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%)",
       },
       boxShadow: {
-        "glow-blue": "0 0 40px -10px rgba(59,130,246,0.4)",
+        "glow-brand":  "0 0 40px -10px oklch(0.73 0.20 55 / 0.40)",
         "glow-violet": "0 0 40px -10px rgba(139,92,246,0.4)",
       },
       animation: {

@@ -71,8 +71,8 @@ export default function AutoApplyPage() {
         </Link>
 
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-blue-500/30 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-blue-400" />
+          <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+            <Zap className="w-5 h-5 text-orange-400" />
           </div>
           <div>
             <h1 className="text-2xl font-black text-white">Auto-Apply</h1>
@@ -80,8 +80,8 @@ export default function AutoApplyPage() {
           </div>
         </div>
 
-        <div className="mb-8 bg-violet-500/10 border border-violet-500/20 rounded-xl px-4 py-3 flex items-center gap-2">
-          <span className="text-violet-400 text-xs font-semibold">Premium</span>
+        <div className="mb-8 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-3 flex items-center gap-2">
+          <span className="text-orange-400 text-xs font-semibold">Premium</span>
           <span className="text-slate-400 text-xs">Cette fonctionnalité est réservée au plan Premium et Lifetime.</span>
         </div>
 
@@ -93,7 +93,7 @@ export default function AutoApplyPage() {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Nom complet *</label>
                 <input
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500"
                   placeholder="Marie Dupont"
                   value={profile.fullName}
                   onChange={(e) => setProfile((p) => ({ ...p, fullName: e.target.value }))}
@@ -103,7 +103,7 @@ export default function AutoApplyPage() {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Poste visé *</label>
                 <input
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500"
                   placeholder="Product Manager"
                   value={profile.targetJob}
                   onChange={(e) => setProfile((p) => ({ ...p, targetJob: e.target.value }))}
@@ -114,7 +114,7 @@ export default function AutoApplyPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Expérience professionnelle *</label>
               <textarea
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 min-h-[100px]"
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500 min-h-[100px]"
                 placeholder="Décrivez vos expériences clés (postes, réalisations, durée)..."
                 value={profile.experience}
                 onChange={(e) => setProfile((p) => ({ ...p, experience: e.target.value }))}
@@ -124,7 +124,7 @@ export default function AutoApplyPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Compétences clés</label>
               <input
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500"
                 placeholder="React, Python, Gestion de projet, Agile..."
                 value={profile.skills}
                 onChange={(e) => setProfile((p) => ({ ...p, skills: e.target.value }))}
@@ -137,7 +137,7 @@ export default function AutoApplyPage() {
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-white">Offres ({offers.length}/5)</h2>
               {offers.length < 5 && (
-                <button type="button" onClick={addOffer} className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-sm transition-colors">
+                <button type="button" onClick={addOffer} className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 text-sm transition-colors">
                   <Plus className="w-4 h-4" /> Ajouter une offre
                 </button>
               )}
@@ -155,21 +155,21 @@ export default function AutoApplyPage() {
                 </div>
                 <div className="grid md:grid-cols-2 gap-3">
                   <input
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500"
                     placeholder="Entreprise *"
                     value={offer.company}
                     onChange={(e) => updateOffer(i, "company", e.target.value)}
                     required
                   />
                   <input
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500"
                     placeholder="Description entreprise (optionnel)"
                     value={offer.companyDescription}
                     onChange={(e) => updateOffer(i, "companyDescription", e.target.value)}
                   />
                 </div>
                 <textarea
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 min-h-[90px]"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-500 min-h-[90px]"
                   placeholder="Description du poste / annonce *"
                   value={offer.jobDescription}
                   onChange={(e) => updateOffer(i, "jobDescription", e.target.value)}
@@ -184,7 +184,7 @@ export default function AutoApplyPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-lg"
+            className="w-full bg-orange-500 hover:bg-orange-400 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-lg shadow-lg shadow-orange-500/20"
           >
             {loading ? (
               <><span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Génération en cours ({offers.length} offres)...</>

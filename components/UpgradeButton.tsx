@@ -39,7 +39,7 @@ export default function UpgradeButton({
       disabled={loading}
       className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all disabled:opacity-60 ${
         primary
-          ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/20"
+          ? "bg-orange-500 text-white hover:bg-orange-400 shadow-lg shadow-orange-500/20"
           : "bg-slate-700 text-white hover:bg-slate-600"
       }`}
     >
