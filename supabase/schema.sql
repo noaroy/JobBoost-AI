@@ -5,7 +5,7 @@ create table public.profiles (
   id uuid references auth.users on delete cascade primary key,
   full_name text,
   email text,
-  plan text default 'free' check (plan in ('free', 'monthly', 'lifetime')),
+  plan text default 'free' check (plan in ('free', 'basic', 'premium', 'monthly', 'lifetime')),
   stripe_customer_id text,
   stripe_subscription_id text,
   generations_count integer default 0,
@@ -43,7 +43,7 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Fonction pour incrémenter le compteur de générations (appelée par les API routes)
+-- Fonction pour incrémenter le compteur de générations
 create or replace function public.increment_generations(user_id uuid)
 returns void as $$
 begin
@@ -58,7 +58,12 @@ $$ language plpgsql security definer;
 create table public.generations (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles on delete cascade not null,
-  type text not null check (type in ('cv', 'cover_letter', 'interview_prep', 'company_suggestions')),
+  type text not null check (type in (
+    'cv', 'cover_letter', 'cover-letter',
+    'interview_prep', 'interview',
+    'company_suggestions', 'companies',
+    'score', 'follow-up', 'action-plan', 'auto-apply'
+  )),
   title text,
   input jsonb,
   output text,
@@ -77,7 +82,6 @@ create policy "Users can insert own generations"
 
 -- Index pour les requêtes fréquentes
 create index generations_user_id_idx on public.generations (user_id);
-create index generations_type_idx on public.generations (type);
 create index generations_created_at_idx on public.generations (created_at desc);
 
 -- Permettre au service role de mettre à jour les profils (pour le webhook Stripe)
@@ -85,3 +89,21 @@ create policy "Service role can update profiles"
   on public.profiles for update
   using (true)
   with check (true);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- MIGRATION : si la table existe déjà, exécutez ces commandes dans l'éditeur
+-- SQL Supabase pour mettre à jour les contraintes :
+--
+-- ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_plan_check;
+-- ALTER TABLE public.profiles ADD CONSTRAINT profiles_plan_check
+--   CHECK (plan IN ('free', 'basic', 'premium', 'monthly', 'lifetime'));
+--
+-- ALTER TABLE public.generations DROP CONSTRAINT IF EXISTS generations_type_check;
+-- ALTER TABLE public.generations ADD CONSTRAINT generations_type_check
+--   CHECK (type IN (
+--     'cv', 'cover_letter', 'cover-letter',
+--     'interview_prep', 'interview',
+--     'company_suggestions', 'companies',
+--     'score', 'follow-up', 'action-plan', 'auto-apply'
+--   ));
+-- ─────────────────────────────────────────────────────────────────────────────

@@ -34,17 +34,23 @@ function LoginForm() {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (signInError) {
-      setError(translateError(signInError.message));
+      if (signInError) {
+        setError(translateError(signInError.message));
+        return;
+      }
+
+      router.refresh();
+      router.push(redirectTo);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inattendue";
+      setError(translateError(message));
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.refresh();
-    router.push(redirectTo);
   }
 
   return (

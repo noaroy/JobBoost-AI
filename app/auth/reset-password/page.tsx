@@ -27,16 +27,21 @@ export default function ResetPasswordPage() {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const { error: updateError } = await supabase.auth.updateUser({ password });
+    try {
+      const supabase = createClient();
+      const { error: updateError } = await supabase.auth.updateUser({ password });
 
-    if (updateError) {
-      setError("Le lien a expiré. Recommencez depuis la page de connexion.");
+      if (updateError) {
+        setError("Le lien a expiré. Recommencez depuis la page de connexion.");
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch {
+      setError("Erreur de connexion. Réessayez.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/dashboard");
   }
 
   return (

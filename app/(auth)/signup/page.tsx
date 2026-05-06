@@ -13,7 +13,7 @@ const perks = [
 ];
 
 function translateError(msg: string): string {
-  if (msg.includes("already registered") || msg.includes("already been registered"))
+  if (msg.includes("already registered") || msg.includes("already been registered") || msg.includes("User already registered"))
     return "Un compte existe déjà avec cette adresse email. Connectez-vous.";
   if (msg.includes("Password should be at least"))
     return "Le mot de passe doit contenir au moins 6 caractères.";
@@ -25,7 +25,9 @@ function translateError(msg: string): string {
     return "Veuillez confirmer votre email avant de vous connecter.";
   if (msg.includes("signup_disabled"))
     return "Les inscriptions sont temporairement désactivées.";
-  return msg;
+  if (msg.includes("Failed to fetch") || msg.includes("NetworkError"))
+    return "Erreur de connexion. Vérifiez votre connexion internet et réessayez.";
+  return `Erreur : ${msg}`;
 }
 
 export default function SignupPage() {
@@ -42,30 +44,35 @@ export default function SignupPage() {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: name },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const supabase = createClient();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
 
-    if (signUpError) {
-      setError(translateError(signUpError.message));
+      if (signUpError) {
+        setError(translateError(signUpError.message));
+        return;
+      }
+
+      if (data.session) {
+        router.refresh();
+        router.push("/dashboard");
+        return;
+      }
+
+      setEmailSent(true);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Une erreur inattendue est survenue.";
+      setError(translateError(message));
+    } finally {
       setLoading(false);
-      return;
     }
-
-    if (data.session) {
-      router.refresh();
-      router.push("/dashboard");
-      return;
-    }
-
-    setEmailSent(true);
-    setLoading(false);
   }
 
   // ── Email sent screen ──────────────────────────────────────────────────────
