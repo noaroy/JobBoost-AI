@@ -6,7 +6,8 @@ export default function FinalCTA() {
     <section className="relative bg-slate-950 py-28 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-orange-500/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-violet-600/10 rounded-full blur-3xl" />
       </div>
 
       <div className="container-narrow mx-auto px-4 text-center relative z-10">
@@ -32,7 +33,7 @@ export default function FinalCTA() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <Link
             href="/signup"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-orange-500 text-white font-black text-lg px-8 py-4 rounded-2xl hover:bg-orange-400 transition-all shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-black text-lg px-8 py-4 rounded-2xl hover:from-blue-500 hover:to-violet-500 transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5"
           >
             <Zap className="w-5 h-5" />
             Générer ma 1ère candidature — Gratuit
