@@ -5,32 +5,32 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    q: "Est-ce vraiment gratuit pour commencer ?",
-    a: "Oui, votre première candidature complète (CV + lettre + préparation entretien) est 100% gratuite, sans carte bancaire. Vous voyez la qualité avant de payer quoi que ce soit.",
+    q: "C'est vraiment gratuit pour commencer ?",
+    a: "Oui. Votre première candidature complète — CV + lettre + score — est entièrement gratuite. Pas de carte bancaire, pas de période d'essai qui se transforme en abonnement. Vous voyez ce que ça donne avant de décider quoi que ce soit.",
+  },
+  {
+    q: "Est-ce que ma candidature va avoir l'air générée par une IA ?",
+    a: "C'est la question que tout le monde pose, et c'est légitime. La réponse courte : non, si vous prenez 2 minutes pour la relire. L'IA structure et intègre les mots-clés — mais c'est votre expérience, votre parcours, votre voix. On vous recommande toujours de relire et d'ajuster une phrase ou deux avant d'envoyer.",
   },
   {
     q: "Quelle différence entre Basic, Premium et Lifetime ?",
-    a: "Basic (29,99€/mois) donne accès aux candidatures illimitées, simulation d'entretien et score. Premium (39,99€/mois) ajoute l'Auto-Apply en lot, les relances automatiques, le plan d'action IA et le job matching. Lifetime (99,99€) est l'accès Premium à vie — rentabilisé après 2-3 mois.",
+    a: "Basic (29,99€/mois) : candidatures illimitées, simulation d'entretien, score /100. Premium (39,99€/mois) : tout Basic + Auto-Apply en lot (5 offres simultanées), relances automatiques, plan d'action hebdomadaire. Lifetime (99,99€ une fois) : accès Premium à vie — rentabilisé après 2-3 mois d'abonnement Premium.",
   },
   {
-    q: "Mes candidatures sont-elles vraiment personnalisées ?",
-    a: "Oui. L'IA analyse le texte exact de chaque offre d'emploi pour adapter votre CV et votre lettre. Chaque candidature est unique et fait référence au poste et à l'entreprise spécifiques.",
+    q: "Comment l'IA sait quels mots-clés utiliser ?",
+    a: "Elle analyse le texte exact de l'offre que vous collez — les mots qui reviennent, ceux en gras, ceux dans le titre du poste. Ces mots sont ceux que l'ATS va chercher. Elle les intègre naturellement dans votre CV sans les forcer. Ce n'est pas du keyword stuffing — c'est de la reformulation intelligente.",
   },
   {
-    q: "Comment l'IA optimise mon CV pour les ATS ?",
-    a: "Elle intègre les mots-clés importants de l'annonce, structure le CV dans un format compatible avec les logiciels de tri automatique (ATS), et reformule vos expériences avec le vocabulaire du secteur visé.",
+    q: "Mes données sont-elles en sécurité ?",
+    a: "Vos données sont chiffrées en transit (SSL) et stockées sur des serveurs européens conformes au RGPD. On ne vend pas vos données, on ne les utilise pas pour entraîner des modèles sans votre consentement. Le détail est dans notre politique de confidentialité — rédigée en français lisible, pas en jargon juridique.",
   },
   {
-    q: "Qu'est-ce que la simulation d'entretien ?",
-    a: "L'IA joue le rôle du recruteur et vous pose des questions adaptées au poste (comportementales, techniques, motivationnelles). Vous répondez, et elle vous donne un score et un feedback immédiat pour vous améliorer.",
+    q: "Comment fonctionne la simulation d'entretien ?",
+    a: "Vous décrivez le poste et l'entreprise, et l'IA adapte les questions à ce contexte. Elle pose des questions comportementales (STAR), techniques selon le domaine, et motivationnelles. Vous répondez par écrit, elle vous donne un retour détaillé sur chaque réponse. C'est brutal dans le bon sens — elle n'est pas là pour vous ménager.",
   },
   {
-    q: "Comment fonctionne l'Auto-Apply ?",
-    a: "Vous entrez vos informations une seule fois et collez jusqu'à 5 offres d'emploi. L'IA génère simultanément un CV et une lettre personnalisés pour chaque offre. Idéal pour envoyer beaucoup de candidatures rapidement.",
-  },
-  {
-    q: "Puis-je obtenir un remboursement ?",
-    a: "Oui, vous disposez de 7 jours satisfait ou remboursé. Si JobBoost AI ne vous convient pas, contactez-nous par email et nous remboursons immédiatement, sans question.",
+    q: "Et si ça ne me convient pas ?",
+    a: "7 jours satisfait ou remboursé, sans condition. Envoyez un email et on rembourse — pas de questionnaire, pas de processus compliqué. Si ça ne vous a pas aidé, on ne va pas se battre pour garder votre argent.",
   },
 ];
 
@@ -38,7 +38,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-slate-800 last:border-0">
+    <div className="border-b border-white/[0.06] last:border-0">
       <button
         className="w-full flex items-center justify-between py-5 text-left gap-4"
         onClick={() => setOpen(!open)}
@@ -46,35 +46,36 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       >
         <span className="font-semibold text-white text-sm md:text-base">{q}</span>
         <ChevronDown
-          className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-zinc-600 flex-shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <div className="pb-5">
-          <p className="text-slate-400 text-sm leading-relaxed">{a}</p>
+      <div
+        className="grid transition-all duration-300 ease-out"
+        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <p className="text-zinc-400 text-sm leading-relaxed pb-5">{a}</p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
 export default function FAQ() {
   return (
-    <section id="faq" className="relative bg-slate-900/40 py-24 border-t border-slate-800/50">
+    <section id="faq" className="relative bg-zinc-900/20 py-24 border-t border-white/[0.05]">
       <div className="container-narrow mx-auto px-4">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-            <span className="text-sm text-slate-300 font-medium">Questions fréquentes</span>
-          </div>
+          <p className="text-xs text-zinc-600 uppercase tracking-[0.2em] font-semibold mb-4">Questions fréquentes</p>
           <h2 className="text-4xl font-black text-white mb-4">
-            Tout ce que vous devez savoir
+            Ce que vous vous demandez sûrement
           </h2>
-          <p className="text-slate-400 text-lg">
-            Des questions ? Voici les réponses.
+          <p className="text-zinc-500 text-lg">
+            Réponses directes, sans remplissage.
           </p>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl px-6 md:px-8">
+        <div className="bg-zinc-950 border border-white/[0.07] rounded-2xl px-6 md:px-8">
           {faqs.map((faq, i) => (
             <FAQItem key={i} q={faq.q} a={faq.a} />
           ))}

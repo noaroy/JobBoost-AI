@@ -1,78 +1,89 @@
 import Link from "next/link";
-import { BookOpen, Mic, CheckSquare } from "lucide-react";
+import { BookOpen, Mic, CheckSquare, ArrowRight } from "lucide-react";
 
 const bonuses = [
   {
-    icon: BookOpen,
-    title: "50 Templates de Lettres",
-    value: "49€",
-    desc: "50 lettres rédigées par des experts RH pour tous les secteurs : tech, commerce, santé, finance, créatif...",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10 border-blue-500/20",
+    icon: CheckSquare,
+    title: "Checklist 30 jours — du 1er jour au 1er entretien",
+    desc: "Un plan quotidien concret : quoi faire le lundi matin, quoi relancer le jeudi, comment mesurer votre semaine. Rédigé avec des coaches emploi, pas sorti d'un blog LinkedIn.",
+    iconColor: "text-emerald-400",
   },
   {
     icon: Mic,
-    title: "20 Réponses d'Entretien",
-    value: "39€",
-    desc: "Les 20 questions les plus posées en entretien avec des réponses modèles percutantes (méthode STAR).",
-    color: "text-violet-400",
-    bg: "bg-violet-500/10 border-violet-500/20",
+    title: "20 réponses aux questions d'entretien les plus redoutées",
+    desc: "Celles qui font trébucher même les candidats bien préparés. Pour chacune, la structure de réponse STAR avec un exemple complet que vous pouvez adapter à votre expérience.",
+    iconColor: "text-zinc-300",
   },
   {
-    icon: CheckSquare,
-    title: "Checklist 30 Jours",
-    value: "19€",
-    desc: "Un plan d'action quotidien pour trouver un emploi en 30 jours. Quoi faire chaque matin pour maximiser vos chances.",
-    color: "text-amber-400",
-    bg: "bg-amber-500/10 border-amber-500/20",
+    icon: BookOpen,
+    title: "50 templates de lettres par secteur",
+    desc: "Tech, finance, santé, commerce, RH — un point de départ solide pour chaque secteur que vous pouvez adapter ou utiliser directement avec le générateur IA.",
+    iconColor: "text-amber-400",
   },
 ];
 
 export default function Bonuses() {
   return (
-    <section className="relative bg-slate-900/40 py-24 border-y border-slate-800/50">
+    <section className="relative bg-zinc-900/30 py-24 border-y border-white/[0.05]">
       <div className="container-wide mx-auto px-4">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 mb-6">
-            <span className="text-amber-400 text-sm">🎁</span>
-            <span className="text-sm text-amber-400 font-medium">Bonus exclusifs</span>
+
+        <div className="grid lg:grid-cols-[1fr,260px] gap-12 items-start mb-14">
+          <div data-reveal>
+            <p className="text-xs text-amber-400/70 uppercase tracking-[0.2em] font-semibold mb-4">Ressources incluses</p>
+            <h2
+              className="font-display font-black text-white leading-tight mb-5"
+              style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", letterSpacing: "-0.025em" }}
+            >
+              On a aussi construit{" "}
+              <span className="text-amber-400">les guides</span>{" "}
+              qu&apos;on aurait voulu avoir
+            </h2>
+            <p className="text-lg text-zinc-400 max-w-xl leading-relaxed">
+              Pas des bonus marketing. Des ressources qu&apos;on utilise nous-mêmes pour
+              comprendre ce qui marche dans la recherche d&apos;emploi en France aujourd&apos;hui.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
-            107€ de ressources offerts<br />
-            <span className="text-amber-400">avec votre accès</span>
-          </h2>
-          <p className="text-xl text-slate-400 max-w-xl mx-auto">
-            En plus de l&apos;IA, ces ressources sont disponibles immédiatement dans votre dashboard.
-          </p>
+
+          <div data-reveal data-delay="1" className="hidden lg:flex flex-col gap-3">
+            <div className="bg-zinc-950 border border-white/[0.07] rounded-2xl p-5 text-center">
+              <div className="text-3xl font-black text-white mb-1">3</div>
+              <div className="text-sm text-zinc-500">ressources incluses</div>
+              <div className="text-xs text-zinc-700 mt-2">Disponibles dès la création du compte</div>
+            </div>
+            <div className="bg-zinc-950 border border-amber-400/15 rounded-2xl p-4 text-center">
+              <div className="text-xs text-zinc-600 mb-2">Accès</div>
+              <div className="text-xl font-black text-amber-400">Immédiat</div>
+              <div className="text-xs text-zinc-700 mt-1">Pas besoin de payer pour lire</div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-5 mb-10 max-w-4xl mx-auto">
+        <div data-reveal data-delay="2" className="divide-y divide-white/[0.05] mb-12">
           {bonuses.map((b, i) => (
-            <div key={i} className={`relative bg-slate-900 border ${b.bg} rounded-2xl p-6 overflow-hidden`}>
-              <div className="absolute top-4 right-4 bg-amber-500 text-white text-xs font-black px-2 py-0.5 rounded-md">
-                OFFERT
+            <div
+              key={i}
+              className="group grid grid-cols-[3rem,1fr] md:grid-cols-[4rem,1fr] items-start gap-5 md:gap-8 py-7 hover:bg-white/[0.02] -mx-4 px-4 transition-colors cursor-default"
+            >
+              <b.icon className={`w-6 h-6 ${b.iconColor} mt-1 flex-shrink-0`} />
+              <div>
+                <h3 className="font-bold text-white text-base md:text-lg mb-1.5 group-hover:text-amber-50 transition-colors leading-snug">
+                  {b.title}
+                </h3>
+                <p className="text-zinc-500 text-sm leading-relaxed max-w-xl">{b.desc}</p>
               </div>
-              <div className={`w-10 h-10 rounded-xl ${b.bg} border flex items-center justify-center mb-4`}>
-                <b.icon className={`w-5 h-5 ${b.color}`} />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-1">{b.title}</h3>
-              <p className="text-xs text-amber-400 font-semibold mb-3">Valeur : {b.value} — Inclus gratuitement</p>
-              <p className="text-slate-400 text-sm leading-relaxed">{b.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-amber-950/40 to-amber-900/20 border border-amber-900/40 rounded-2xl p-6 text-center">
-          <p className="text-xl font-bold text-white mb-2">
-            Valeur totale des bonus :{" "}
-            <span className="line-through text-slate-500">107€</span>{" "}
-            <span className="text-amber-400">→ 0€ inclus avec votre accès</span>
+        <div data-reveal data-delay="3" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+          <p className="text-zinc-600 text-sm max-w-md">
+            Ces ressources sont accessibles dans votre dashboard dès la création du compte — plan gratuit inclus.
           </p>
-          <p className="text-slate-400 text-sm mb-4">
-            Disponibles immédiatement dans votre dashboard dès la création du compte.
-          </p>
-          <Link href="/signup" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold px-6 py-3 rounded-xl transition-colors">
-            Accéder aux bonus gratuitement →
+          <Link
+            href="/signup"
+            className="inline-flex items-center gap-2 bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-600 font-semibold px-5 py-2.5 rounded-xl transition-all text-sm flex-shrink-0"
+          >
+            Accéder aux ressources <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

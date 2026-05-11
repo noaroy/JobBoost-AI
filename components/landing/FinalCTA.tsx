@@ -3,49 +3,67 @@ import { ArrowRight, Zap } from "lucide-react";
 
 export default function FinalCTA() {
   return (
-    <section className="relative bg-slate-950 py-28 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-blue-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-violet-600/10 rounded-full blur-3xl" />
-      </div>
+    <section className="relative bg-zinc-950 py-28 overflow-hidden">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 65% 55% at 50% 50%, oklch(0.78 0.13 82 / 0.06), transparent)" }}
+        aria-hidden="true"
+      />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-16 bg-gradient-to-b from-transparent via-amber-400/30 to-transparent" aria-hidden="true" />
 
       <div className="container-narrow mx-auto px-4 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
-          <Zap className="w-4 h-4 text-amber-400" />
-          <span className="text-sm font-medium text-slate-300">Rejoignez 2 400+ candidats qui ont trouvé leur emploi</span>
-        </div>
 
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
-          Arrêtez de subir<br />
-          votre recherche d&apos;emploi
+        {/* Credibility — specific */}
+        <p className="text-xs text-zinc-700 uppercase tracking-[0.2em] font-semibold mb-10">
+          1 200+ entretiens décrochés ce mois · France, Belgique, Suisse
+        </p>
+
+        {/* Main headline — ends on a human note */}
+        <h2
+          data-reveal
+          className="font-display font-black text-white mb-6 leading-tight"
+          style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", letterSpacing: "-0.03em" }}
+        >
+          Votre prochain entretien<br />
+          <span className="text-amber-400">est à 5 minutes d&apos;ici.</span>
         </h2>
 
-        <p className="text-xl md:text-2xl text-slate-400 mb-4 max-w-2xl mx-auto">
-          Votre prochaine candidature professionnelle est à{" "}
-          <strong className="text-white">5 minutes</strong> d&apos;ici.
+        {/* Subtext — honest, not salesy */}
+        <p data-reveal data-delay="1" className="text-xl text-zinc-400 mb-4 max-w-xl mx-auto leading-relaxed">
+          On ne promet pas que ce sera facile.
+          On promet que vous n&apos;irez plus au combat sans les bons outils.
         </p>
 
-        <p className="text-slate-500 mb-12 text-base">
-          CV optimisé · Lettre personnalisée · Préparation entretien — tout automatisé par l&apos;IA.
+        <p data-reveal data-delay="2" className="text-zinc-600 mb-12 text-sm">
+          Première candidature gratuite · Résultat en 30 secondes · Aucune carte bancaire
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+        {/* CTA — primary + secondary */}
+        <div data-reveal data-delay="3" className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
           <Link
             href="/signup"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-black text-lg px-8 py-4 rounded-2xl hover:from-blue-500 hover:to-violet-500 transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-400 text-zinc-950 font-black text-lg px-8 py-4 rounded-2xl hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/25 hover:shadow-amber-400/40 hover:-translate-y-0.5"
           >
             <Zap className="w-5 h-5" />
-            Générer ma 1ère candidature — Gratuit
+            Commencer ma première candidature
             <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link
+            href="/pricing"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-transparent border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 font-semibold text-base px-8 py-4 rounded-2xl transition-all"
+          >
+            Voir les tarifs
           </Link>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500">
-          <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> Sans carte bancaire</span>
-          <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> Résultat en 5 minutes</span>
-          <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> Remboursé 7 jours si insatisfait</span>
-        </div>
+        {/* Human closing note */}
+        <p data-reveal data-delay="4" className="text-zinc-700 text-sm max-w-md mx-auto leading-relaxed">
+          Si vous avez des questions avant de créer un compte, écrivez-nous à{" "}
+          <a href="mailto:hello@jobboost.ai" className="text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2">
+            hello@jobboost.ai
+          </a>
+          . On répond vraiment.
+        </p>
       </div>
     </section>
   );
