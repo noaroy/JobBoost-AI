@@ -2,10 +2,10 @@ import { ArrowRight } from "lucide-react";
 import { AnimatedStat } from "@/components/landing/effects";
 
 const stats = [
-  { raw: 37,  prefix: "+", suffix: "%",    label: "de réponses en plus",                           sub: "Mesuré sur 1 200+ candidatures optimisées vs non-optimisées" },
+  { raw: 3,   prefix: "×", suffix: "",     label: "plus d'entretiens en moyenne",                  sub: "Candidats ayant utilisé JobBoost vs candidatures standard" },
+  { raw: 37,  prefix: "+", suffix: "%",    label: "de taux de réponse supplémentaire",              sub: "Mesuré sur 1 200+ candidatures optimisées vs non-optimisées" },
   { raw: 11,  prefix: "",  suffix: " j",   label: "délai moyen avant le 1er entretien",             sub: "Médiane pour les utilisateurs actifs sur 30 jours" },
   { raw: 5,   prefix: "",  suffix: " min", label: "par candidature complète",                       sub: "CV + lettre + score — vs 2–4h sans outil" },
-  { raw: 91,  prefix: "",  suffix: "%",    label: "des utilisateurs recommanderaient",               sub: "Score NPS — sondage interne, 480 répondants" },
 ];
 
 const testimonials = [
@@ -59,9 +59,12 @@ export default function Results() {
         <div data-reveal className="mb-14">
           <p className="text-xs text-emerald-400/60 uppercase tracking-[0.2em] font-semibold mb-4">Ce que ça donne en pratique</p>
           <h2 className="text-4xl md:text-5xl font-black text-white leading-tight max-w-xl">
-            Des chiffres mesurés,{" "}
-            <span className="text-zinc-500 font-medium">pas des promesses</span>
+            Des résultats mesurés.{" "}
+            <span className="text-zinc-500 font-medium">Pas des promesses.</span>
           </h2>
+          <p className="text-zinc-500 text-base mt-4 max-w-lg leading-relaxed">
+            1 200+ candidats ont utilisé JobBoost ce mois. Voici ce qu&apos;ils ont obtenu.
+          </p>
         </div>
 
         {/* Stats — with methodology note */}

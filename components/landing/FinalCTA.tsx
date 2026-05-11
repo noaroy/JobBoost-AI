@@ -13,29 +13,34 @@ export default function FinalCTA() {
 
       <div className="container-narrow mx-auto px-4 text-center relative z-10">
 
-        {/* Credibility — specific */}
-        <p className="text-xs text-zinc-700 uppercase tracking-[0.2em] font-semibold mb-10">
+        {/* Credibility — live counter feel */}
+        <div className="inline-flex items-center gap-2 text-xs text-zinc-600 uppercase tracking-[0.2em] font-semibold mb-10">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+          </span>
           1 200+ entretiens décrochés ce mois · France, Belgique, Suisse
-        </p>
+        </div>
 
-        {/* Main headline — ends on a human note */}
+        {/* Main headline — benefit + urgency */}
         <h2
           data-reveal
-          className="font-display font-black text-white mb-6 leading-tight"
+          className="font-black text-white mb-6 leading-tight"
           style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", letterSpacing: "-0.03em" }}
         >
           Votre prochain entretien<br />
-          <span className="text-amber-400">est à 5 minutes d&apos;ici.</span>
+          <span className="text-amber-400">est à 30 secondes d&apos;ici.</span>
         </h2>
 
-        {/* Subtext — honest, not salesy */}
+        {/* Subtext — honest and direct */}
         <p data-reveal data-delay="1" className="text-xl text-zinc-400 mb-4 max-w-xl mx-auto leading-relaxed">
-          On ne promet pas que ce sera facile.
-          On promet que vous n&apos;irez plus au combat sans les bons outils.
+          Pendant que vous hésitez, d&apos;autres postulent avec un CV optimisé.
+          <br />
+          <span className="text-zinc-300">Commencez maintenant — c&apos;est gratuit.</span>
         </p>
 
         <p data-reveal data-delay="2" className="text-zinc-600 mb-12 text-sm">
-          Première candidature gratuite · Résultat en 30 secondes · Aucune carte bancaire
+          Première candidature gratuite · Résultat en 30 secondes · Aucune carte bancaire requise
         </p>
 
         {/* CTA — primary + secondary */}
