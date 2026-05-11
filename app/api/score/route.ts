@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-
     if (!user) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const profile = await getProfile(supabase, user.id);
@@ -17,21 +16,18 @@ export async function POST(req: NextRequest) {
     if (!allowed) return NextResponse.json({ error: reason, upgrade: true }, { status: 403 });
 
     const body = await req.json();
-    const { targetJob, company, cvContent, coverLetterContent } = body;
-
-    if (!targetJob || !company || !cvContent || !coverLetterContent) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+    const { cv, jobOffer } = body;
+    if (!cv) {
+      return NextResponse.json({ error: "Collez le contenu de votre CV" }, { status: 400 });
     }
 
-    const content = await scoreApplication({ targetJob, company, cvContent, coverLetterContent });
+    const content = await scoreApplication({ cv, jobOffer });
 
     await Promise.all([
       supabase.from("generations").insert({
-        user_id: user.id,
-        type: "score",
-        title: `Score — ${targetJob} chez ${company}`,
-        input: body,
-        output: content,
+        user_id: user.id, type: "score",
+        title: "Score candidature",
+        input: body, output: content,
       }),
       incrementGenerationCount(supabase, user.id),
     ]);

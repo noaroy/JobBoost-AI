@@ -1,33 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Zap, Check } from "lucide-react";
+import { ArrowLeft, Zap, Copy, Check } from "lucide-react";
 import UpgradeWall from "@/components/UpgradeWall";
-import CopyButton from "@/components/CopyButton";
+import MarkdownOutput from "@/components/MarkdownOutput";
 
-const initialForm = {
-  fullName: "",
-  email: "",
-  phone: "",
-  location: "",
-  targetJob: "",
-  experience: "",
-  education: "",
-  skills: "",
-  languages: "",
-};
+const LOADING_STEPS = [
+  "Analyse de l'offre d'emploi...",
+  "Extraction des mots-clés ATS...",
+  "Structuration de votre profil...",
+  "Optimisation pour les recruteurs...",
+];
+
+const GHOST_WIDTHS = [85, 70, 90, 55, 75, 88, 60, 78, 65, 82, 50, 70];
 
 export default function CVGeneratorPage() {
-  const [form, setForm] = useState(initialForm);
+  const [jobOffer, setJobOffer] = useState("");
+  const [experience, setExperience] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
-  function update(field: keyof typeof form, value: string) {
-    setForm((f) => ({ ...f, [field]: value }));
-  }
+  useEffect(() => {
+    if (!loading) return;
+    const t = setInterval(() => setLoadingStep((s) => (s + 1) % LOADING_STEPS.length), 2200);
+    return () => clearInterval(t);
+  }, [loading]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,18 +41,11 @@ export default function CVGeneratorPage() {
       const res = await fetch("/api/generate/cv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ jobOffer, experience }),
       });
-
       const data = await res.json();
-
-      if (res.status === 403 && data.upgrade) {
-        setShowUpgrade(true);
-        return;
-      }
-
-      if (!res.ok) throw new Error(data.error ?? "Une erreur est survenue");
-
+      if (res.status === 403 && data.upgrade) { setShowUpgrade(true); return; }
+      if (!res.ok) throw new Error(data.error ?? "Erreur lors de la génération");
       setResult(data.content);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
@@ -59,118 +54,164 @@ export default function CVGeneratorPage() {
     }
   }
 
+  function handleCopy() {
+    navigator.clipboard.writeText(result);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <div className="min-h-screen bg-slate-950">
-      {showUpgrade && <UpgradeWall />}
+      {showUpgrade && <UpgradeWall onClose={() => setShowUpgrade(false)} />}
 
-      <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
-        <div className="container-wide mx-auto px-4 h-16 flex items-center gap-4">
-          <Link href="/dashboard" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
+      <header className="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
+          <Link href="/dashboard" className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Dashboard
+            <span className="hidden sm:inline">Dashboard</span>
           </Link>
           <div className="w-px h-4 bg-slate-700" />
-          <h1 className="font-semibold text-white">Générateur de CV optimisé IA</h1>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 bg-orange-500 rounded flex items-center justify-center">
+              <Zap className="w-3 h-3 text-white" />
+            </div>
+            <span className="font-semibold text-white text-sm">CV optimisé ATS</span>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2.5 py-1">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+            IA active
+          </div>
         </div>
       </header>
 
-      <main className="container-wide mx-auto px-4 py-10">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div>
+      <main className="max-w-7xl mx-auto px-4 py-6 lg:py-10">
+        <div className="grid lg:grid-cols-[420px_1fr] gap-6 items-start">
+
+          {/* ── Input panel ── */}
+          <div className="lg:sticky lg:top-20">
             <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center">
-                  <Zap aria-hidden="true" className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-white">Vos informations</h2>
-                  <p className="text-sm text-slate-500">Remplissez pour générer votre CV optimisé</p>
-                </div>
+              <div className="mb-5">
+                <p className="text-xs font-semibold text-orange-400 tracking-widest uppercase mb-2">Générateur IA</p>
+                <h2 className="text-lg font-black text-white">CV optimisé ATS</h2>
+                <p className="text-slate-400 text-sm mt-1">Collez l&apos;offre + votre expérience. L&apos;IA génère un CV prêt à envoyer.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Prénom et nom *" placeholder="Marie Dupont" value={form.fullName} onChange={(v) => update("fullName", v)} required />
-                  <Field label="Email *" placeholder="marie@example.com" value={form.email} onChange={(v) => update("email", v)} type="email" required />
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Offre d&apos;emploi <span className="text-orange-400">*</span>
+                  </label>
+                  <textarea
+                    value={jobOffer}
+                    onChange={(e) => setJobOffer(e.target.value)}
+                    required
+                    rows={7}
+                    placeholder={`Nous recherchons un(e) Développeur React Senior pour rejoindre notre équipe chez Payfit.
+
+Missions :
+- Développer de nouvelles fonctionnalités produit
+- Travailler en collaboration avec les équipes design et backend
+- Participer aux code reviews et à l'amélioration continue
+
+Profil :
+- 4+ ans d'expérience en React
+- Maîtrise de TypeScript et Next.js
+- Sensibilité UX et orientation produit`}
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-600 resize-none transition-colors"
+                  />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Téléphone" placeholder="+33 6 12 34 56 78" value={form.phone} onChange={(v) => update("phone", v)} />
-                  <Field label="Ville" placeholder="Paris, France" value={form.location} onChange={(v) => update("location", v)} />
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Votre expérience / CV actuel <span className="text-orange-400">*</span>
+                  </label>
+                  <textarea
+                    value={experience}
+                    onChange={(e) => setExperience(e.target.value)}
+                    required
+                    rows={5}
+                    placeholder={`Développeur Frontend chez Doctolib (2021–2024)
+- Refonte de l'interface patient, +25% satisfaction
+- Migration React class → hooks sur 40k lignes de code
+
+Développeur React chez une startup SaaS (2019–2021)
+- Développé le dashboard principal de 0 à 10k utilisateurs
+
+Master Informatique – Université Paris-Saclay
+Compétences : React, TypeScript, GraphQL, Node.js`}
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-600 resize-none transition-colors"
+                  />
                 </div>
-                <Field label="Poste visé *" placeholder="Ex: Développeur React Senior, Chef de projet digital..." value={form.targetJob} onChange={(v) => update("targetJob", v)} required />
-                <Textarea label="Expériences professionnelles *" placeholder="Listez vos expériences. Ex: 2022-2024 – Développeur Frontend chez Acme. J'ai développé..." value={form.experience} onChange={(v) => update("experience", v)} rows={4} required />
-                <Textarea label="Formation" placeholder="Ex: Master Informatique – Université Paris-Saclay (2020)" value={form.education} onChange={(v) => update("education", v)} rows={2} />
-                <Field label="Compétences" placeholder="React, TypeScript, Node.js, Agile, SQL..." value={form.skills} onChange={(v) => update("skills", v)} />
-                <Field label="Langues" placeholder="Français (natif), Anglais (B2)" value={form.languages} onChange={(v) => update("languages", v)} />
 
                 {error && (
-                  <div role="alert" aria-live="polite" className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">{error}</div>
+                  <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">{error}</div>
                 )}
 
-                <button type="submit" disabled={loading} className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 text-lg rounded-2xl bg-orange-500 text-white font-bold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed">
-                  {loading ? (<><span className="animate-spin">⚡</span> Génération en cours...</>) : (<><Zap aria-hidden="true" className="w-5 h-5" /> Générer mon CV optimisé</>)}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold text-sm transition-all shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  {loading ? (
+                    <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Génération en cours...</>
+                  ) : (
+                    <><Zap className="w-4 h-4" /> Générer mon CV optimisé ATS</>
+                  )}
                 </button>
-                <p className="text-xs text-center text-slate-600">Résultat en moins de 60 secondes</p>
+                <p className="text-center text-xs text-slate-600">⚡ Résultat en ~15 secondes · Copie en 1 clic</p>
               </form>
             </div>
           </div>
 
-          <div>
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 sticky top-24">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-white">Votre CV généré</h2>
-                {result && <CopyButton text={result} />}
+          {/* ── Output panel ── */}
+          <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-orange-400" />
+                <span className="font-semibold text-white text-sm">Votre CV optimisé ATS</span>
               </div>
-
-              {!result && !loading && (
-                <div className="h-96 flex items-center justify-center bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-700 text-center">
-                  <div>
-                    <div className="text-4xl mb-3">📄</div>
-                    <p className="text-slate-500 text-sm">Votre CV optimisé apparaîtra ici</p>
-                    <p className="text-slate-600 text-xs mt-1">Remplissez le formulaire et cliquez sur Générer</p>
-                  </div>
-                </div>
-              )}
-              {loading && (
-                <div className="h-96 flex items-center justify-center bg-orange-500/5 rounded-xl border border-orange-500/20 text-center">
-                  <div>
-                    <div className="text-4xl mb-3 animate-bounce">⚡</div>
-                    <p className="text-orange-400 font-medium text-sm">L&apos;IA génère votre CV...</p>
-                    <p className="text-slate-500 text-xs mt-1">Optimisation ATS en cours</p>
-                  </div>
-                </div>
-              )}
               {result && (
-                <pre className="whitespace-pre-wrap text-sm text-slate-300 leading-relaxed font-sans bg-slate-800 rounded-xl p-4 overflow-y-auto max-h-[600px]">
-                  {result}
-                </pre>
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? "Copié !" : "Copier"}
+                </button>
               )}
             </div>
+
+            <div className="p-6 min-h-[500px]">
+              {!result && !loading && (
+                <div className="space-y-2.5">
+                  <p className="text-xs text-slate-600 mb-4">Aperçu du résultat ↓</p>
+                  {GHOST_WIDTHS.map((w, i) => (
+                    <div key={i} className="h-3 bg-slate-800 rounded-full opacity-60" style={{ width: `${w}%` }} />
+                  ))}
+                </div>
+              )}
+
+              {loading && (
+                <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                      <Zap className="w-7 h-7 text-orange-400 animate-pulse" />
+                    </div>
+                    <div className="absolute inset-0 rounded-2xl bg-orange-500/5 animate-ping" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white font-semibold text-sm mb-1">L&apos;IA génère votre CV...</p>
+                    <p className="text-orange-400 text-xs animate-pulse">{LOADING_STEPS[loadingStep]}</p>
+                  </div>
+                </div>
+              )}
+
+              {result && <MarkdownOutput content={result} />}
+            </div>
           </div>
+
         </div>
       </main>
-    </div>
-  );
-}
-
-function Field({ label, placeholder, value, onChange, type = "text", required = false }: {
-  label: string; placeholder: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} required={required} className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-500" />
-    </div>
-  );
-}
-
-function Textarea({ label, placeholder, value, onChange, rows = 3, required = false }: {
-  label: string; placeholder: string; value: string; onChange: (v: string) => void; rows?: number; required?: boolean;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} required={required} className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-white placeholder:text-slate-500 resize-y" />
     </div>
   );
 }

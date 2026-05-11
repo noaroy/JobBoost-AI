@@ -4,8 +4,6 @@ export const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }
 
 const MODEL = "claude-sonnet-4-6";
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
 async function ask(system: string, prompt: string, maxTokens = 2000): Promise<string> {
   const msg = await anthropic.messages.create({
     model: MODEL,
@@ -16,178 +14,210 @@ async function ask(system: string, prompt: string, maxTokens = 2000): Promise<st
   return msg.content[0].type === "text" ? msg.content[0].text : "";
 }
 
-// ── CV ───────────────────────────────────────────────────────────────────────
+// ── CV ────────────────────────────────────────────────────────────────────────
 
 export async function generateCV(data: {
-  fullName: string; email: string; phone: string; location: string;
-  targetJob: string; experience: string; education: string;
-  skills: string; languages: string;
+  jobOffer: string;
+  experience: string;
 }): Promise<string> {
   return ask(
-    "Tu es un expert RH et rédacteur de CV professionnel. Tu génères des CV clairs, percutants et optimisés ATS. Réponds uniquement avec le contenu du CV en Markdown.",
-    `Génère un CV professionnel optimisé pour le poste de ${data.targetJob}.
+    "Tu es un expert RH et rédacteur de CV professionnel. Génère des CV optimisés ATS en Markdown structuré. Ne commente pas, réponds uniquement avec le CV.",
+    `Génère un CV professionnel optimisé ATS.
 
-Nom: ${data.fullName} | Email: ${data.email} | Tél: ${data.phone} | Lieu: ${data.location}
+OFFRE D'EMPLOI VISÉE :
+${data.jobOffer}
 
-Expériences: ${data.experience}
-Formation: ${data.education}
-Compétences: ${data.skills}
-Langues: ${data.languages}
+EXPÉRIENCE / PROFIL DU CANDIDAT :
+${data.experience}
 
-Inclus: résumé percutant 3 lignes, bullet points avec résultats chiffrés, mots-clés ATS.`
+Instructions :
+- Identifie le poste cible depuis l'offre et extrait ses mots-clés ATS
+- En-tête : nom (déduit du profil ou "Prénom Nom"), poste cible, email et téléphone fictifs si absents
+- Résumé professionnel percutant (2-3 lignes) avec mots-clés de l'offre
+- Expériences structurées avec résultats chiffrés (ex: "+30% de conversion")
+- Compétences techniques et soft skills en lien avec l'offre
+- Formation (déduite si non fournie)
+- Format Markdown propre et lisible par les ATS`
   );
 }
 
-// ── Cover Letter ─────────────────────────────────────────────────────────────
+// ── Cover Letter ──────────────────────────────────────────────────────────────
 
 export async function generateCoverLetter(data: {
-  fullName: string; targetJob: string; company: string;
-  jobDescription: string; experience: string; motivation: string;
+  jobOffer: string;
+  experience: string;
 }): Promise<string> {
   return ask(
-    "Tu es un expert en rédaction de lettres de motivation percutantes. Réponds uniquement avec le contenu de la lettre.",
-    `Génère une lettre de motivation pour ${data.fullName}, poste: ${data.targetJob} chez ${data.company}.
+    "Tu es un expert en rédaction de lettres de motivation percutantes. Réponds uniquement avec la lettre (objet + corps), sans commentaire.",
+    `Génère une lettre de motivation personnalisée.
 
-Offre: ${data.jobDescription}
-Expérience: ${data.experience}
-Motivations: ${data.motivation}
+OFFRE D'EMPLOI :
+${data.jobOffer}
 
-3 paragraphes max, 350 mots, ton professionnel mais humain, CTA fort en conclusion.`
+PROFIL DU CANDIDAT :
+${data.experience}
+
+Instructions :
+- Extrait automatiquement : nom de l'entreprise, poste, compétences requises
+- Utilise le nom du candidat si mentionné dans son profil
+- Accroche forte qui montre que tu connais l'entreprise
+- 3 paragraphes : accroche → valeur ajoutée concrète → motivation + CTA
+- 280-350 mots, ton professionnel mais humain
+- Intègre les mots-clés de l'offre naturellement
+- Termine par un CTA clair pour un entretien`
   );
 }
 
-// ── Interview Prep ───────────────────────────────────────────────────────────
+// ── Interview Prep ────────────────────────────────────────────────────────────
 
 export async function generateInterviewPrep(data: {
-  targetJob: string; company: string; jobDescription: string; experience: string;
+  jobOffer: string;
+  profile: string;
 }): Promise<string> {
   return ask(
     "Tu es un coach entretien expert. Réponds en Markdown structuré.",
-    `Prépare l'entretien pour: ${data.targetJob} chez ${data.company}.
-Offre: ${data.jobDescription}
-Profil: ${data.experience}
+    `Prépare cet entretien.
 
-Génère: 5 questions clés avec réponses STAR, 3 questions pièges avec contre-stratégie, 2 questions à poser à l'employeur, elevator pitch 90 secondes.`,
+OFFRE D'EMPLOI :
+${data.jobOffer}
+
+PROFIL DU CANDIDAT :
+${data.profile}
+
+Génère :
+## Questions clés
+(5 questions probables avec réponses STAR personnalisées pour ce profil)
+
+## Questions pièges
+(3 questions difficiles avec contre-stratégie)
+
+## Questions à poser à l'employeur
+(3 questions percutantes qui montrent ta motivation)
+
+## Elevator pitch
+(Script 90 secondes personnalisé pour ce poste)`,
     2500
   );
 }
 
-// ── Company Suggestions ──────────────────────────────────────────────────────
+// ── Company Suggestions ───────────────────────────────────────────────────────
 
 export async function suggestCompanies(data: {
-  targetJob: string; location: string; skills: string; preferences: string;
+  query: string;
 }): Promise<string> {
   return ask(
-    "Tu es un expert en recherche d'emploi et connais le marché du travail français. Réponds en Markdown.",
-    `Suggestions pour: ${data.targetJob} à ${data.location}.
-Compétences: ${data.skills} | Préférences: ${data.preferences}
+    "Tu es un expert en recherche d'emploi et connais parfaitement le marché du travail français. Réponds en Markdown.",
+    `Suggestions d'entreprises pour cette recherche : ${data.query}
 
-10 entreprises cibles avec justification, plateformes recommandées, stratégie LinkedIn, checklist 30 jours.`
+Génère :
+## 10 entreprises cibles
+(Pour chaque : Nom | Secteur | Pourquoi postuler | Où postuler)
+
+## Stratégie LinkedIn
+(3 actions concrètes pour approcher ces entreprises)
+
+## Plateformes recommandées
+(Les meilleures pour ce profil)
+
+## Plan d'action 7 jours
+(Checklist quotidienne pour lancer la recherche)`
   );
 }
 
-// ── Application Score ────────────────────────────────────────────────────────
+// ── Application Score ─────────────────────────────────────────────────────────
 
 export async function scoreApplication(data: {
-  targetJob: string; company: string; cvContent: string; coverLetterContent: string;
+  cv: string;
+  jobOffer?: string;
 }): Promise<string> {
   return ask(
     "Tu es un expert RH senior qui évalue des candidatures. Tu donnes des scores précis et des feedbacks actionnables. Réponds en Markdown structuré.",
-    `Évalue cette candidature pour le poste de ${data.targetJob} chez ${data.company}.
+    `Évalue cette candidature.
 
-CV:
-${data.cvContent}
+CV :
+${data.cv}
 
-Lettre de motivation:
-${data.coverLetterContent}
+${data.jobOffer ? `OFFRE D'EMPLOI :\n${data.jobOffer}` : ""}
 
-Génère une évaluation avec:
-## Score Global: X/100
+Génère :
+## Score Global : X/100
 
-### Détail des scores:
-- **CV (clarté, ATS, impact)**: X/100
-- **Lettre de motivation (personnalisation, accroche)**: X/100
-- **Adéquation avec le poste**: X/100
-- **Présentation professionnelle**: X/100
+### Détail :
+- **Impact et clarté du CV** : X/100
+- **Optimisation ATS** : X/100
+- **Mots-clés manquants** : liste des 5 plus importants
+${data.jobOffer ? "- **Adéquation avec le poste** : X/100" : ""}
 
-### ✅ Points forts (3 points)
+## ✅ Points forts (3 points)
 
-### ⚠️ Points à améliorer (3 points avec exemples concrets)
+## ⚠️ Améliorations prioritaires
+(3 points avec exemples concrets)
 
-### 🚀 Actions prioritaires (dans l'ordre d'impact)
+## 🚀 Actions immédiates
+(Dans l'ordre d'impact)
 
-### 💡 Probabilité d'être sélectionné pour un entretien: X%`,
+## 💡 Probabilité d'être sélectionné : X%`,
     2000
   );
 }
 
-// ── Follow-up Email ──────────────────────────────────────────────────────────
+// ── Follow-up Email ───────────────────────────────────────────────────────────
 
 export async function generateFollowUp(data: {
-  fullName: string; targetJob: string; company: string;
-  applicationDate: string; daysSince: number; additionalContext: string;
+  context: string;
+  previousMessage?: string;
 }): Promise<string> {
   return ask(
-    "Tu es un expert en communication professionnelle. Tu rédiges des emails de relance percutants mais sans agressivité. Réponds uniquement avec le contenu de l'email.",
+    "Tu es un expert en communication professionnelle. Tu rédiges des emails de relance percutants mais sans agressivité. Réponds uniquement avec l'email (objet + corps).",
     `Rédige un email de relance professionnel.
 
-Candidat: ${data.fullName}
-Poste: ${data.targetJob} chez ${data.company}
-Date candidature: ${data.applicationDate} (il y a ${data.daysSince} jours)
-Contexte: ${data.additionalContext}
+CONTEXTE :
+${data.context}
 
-L'email doit:
-- Objet accrocheur (inclus-le)
+${data.previousMessage ? `MESSAGE PRÉCÉDENT :\n${data.previousMessage}` : ""}
+
+L'email doit :
+- Commencer par "Objet : [objet accrocheur]"
 - Rappel bref et positif de la candidature
-- Apport de valeur supplémentaire ou information nouvelle
-- Réaffirmation de l'intérêt
+- Apporter une valeur ou information nouvelle
 - CTA clair pour un entretien
-- Ton professionnel et confiant (pas suppliant)
-- 150 mots maximum`,
+- Ton confiant et professionnel (pas suppliant)
+- 150 mots max`,
     800
   );
 }
 
-// ── Daily Action Plan ────────────────────────────────────────────────────────
+// ── Action Plan ───────────────────────────────────────────────────────────────
 
 export async function generateActionPlan(data: {
-  targetJob: string; location: string; experienceLevel: string;
-  applicationsCount: number; responsesCount: number; daysSearching: number;
+  situation: string;
 }): Promise<string> {
-  const responseRate = data.applicationsCount > 0
-    ? Math.round((data.responsesCount / data.applicationsCount) * 100)
-    : 0;
-
   return ask(
     "Tu es un coach emploi expert. Tu crées des plans d'action personnalisés et actionnables. Réponds en Markdown.",
-    `Crée un plan d'action pour cette semaine.
+    `Crée un plan d'action pour cette semaine de recherche d'emploi.
 
-Recherche: ${data.targetJob} à ${data.location}
-Niveau: ${data.experienceLevel}
-Candidatures envoyées: ${data.applicationsCount}
-Réponses reçues: ${data.responsesCount} (taux: ${responseRate}%)
-Jours de recherche: ${data.daysSearching}
+SITUATION :
+${data.situation}
 
-Génère:
-## 📊 Analyse de ta situation
-(diagnostic honnête basé sur les stats)
+Génère :
+## 📊 Diagnostic
+(Analyse honnête de la situation et des axes d'amélioration)
 
-## 🎯 Objectifs de la semaine
-(3 objectifs SMART)
+## 🎯 3 objectifs SMART pour cette semaine
 
 ## 📅 Plan jour par jour (Lun → Ven)
-(tâches concrètes avec durée estimée)
+(Tâches concrètes avec durée estimée)
 
 ## ⚡ Action prioritaire aujourd'hui
-(1 seule chose, la plus impactante)
+(1 seule action, la plus impactante)
 
 ## 💡 Conseil stratégique
-(basé sur le taux de réponse actuel)`,
+(Basé sur la situation décrite)`,
     1800
   );
 }
 
-// ── Interview Simulation ─────────────────────────────────────────────────────
+// ── Interview Simulation ──────────────────────────────────────────────────────
 
 export async function generateInterviewQuestion(data: {
   targetJob: string; company: string; jobDescription: string;
@@ -204,7 +234,7 @@ Offre: ${data.jobDescription}
 Question numéro: ${data.questionNumber}
 ${history ? `Historique:\n${history}` : ""}
 
-Génère la prochaine question d'entretien. Varie les types (comportementale, technique, motivationnelle, mise en situation).
+Génère la prochaine question. Varie les types (comportementale, technique, motivationnelle, mise en situation).
 Réponds en JSON: {"question": "...", "tip": "Conseil court pour bien répondre"}`,
     400
   );
@@ -243,23 +273,28 @@ Réponse du candidat:
   }
 }
 
-// ── Auto-Apply (batch) ───────────────────────────────────────────────────────
+// ── Auto-Apply (batch) ────────────────────────────────────────────────────────
 
 export async function generateBatchApplication(data: {
   fullName: string; targetJob: string; experience: string; skills: string;
   company: string; companyDescription: string; jobDescription: string;
 }): Promise<{ cv: string; coverLetter: string }> {
+  const experienceText = [
+    data.fullName && `Nom : ${data.fullName}`,
+    data.targetJob && `Poste visé : ${data.targetJob}`,
+    `Expérience : ${data.experience}`,
+    data.skills && `Compétences : ${data.skills}`,
+  ].filter(Boolean).join("\n");
+
+  const jobOfferText = [
+    `Entreprise : ${data.company}`,
+    data.companyDescription,
+    data.jobDescription,
+  ].filter(Boolean).join("\n\n");
+
   const [cv, coverLetter] = await Promise.all([
-    generateCV({
-      fullName: data.fullName, email: "", phone: "", location: "",
-      targetJob: data.targetJob, experience: data.experience,
-      education: "", skills: data.skills, languages: "Français (natif)",
-    }),
-    generateCoverLetter({
-      fullName: data.fullName, targetJob: data.targetJob,
-      company: data.company, jobDescription: data.jobDescription,
-      experience: data.experience, motivation: `Intérêt pour ${data.companyDescription}`,
-    }),
+    generateCV({ jobOffer: jobOfferText, experience: experienceText }),
+    generateCoverLetter({ jobOffer: jobOfferText, experience: experienceText }),
   ]);
   return { cv, coverLetter };
 }

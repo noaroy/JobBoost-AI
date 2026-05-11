@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-
     if (!user) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const profile = await getProfile(supabase, user.id);
@@ -17,28 +16,18 @@ export async function POST(req: NextRequest) {
     if (!allowed) return NextResponse.json({ error: reason, upgrade: true }, { status: 403 });
 
     const body = await req.json();
-    const { fullName, targetJob, company, applicationDate, daysSince, additionalContext } = body;
-
-    if (!fullName || !targetJob || !company || !applicationDate) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+    const { context, previousMessage } = body;
+    if (!context) {
+      return NextResponse.json({ error: "Décrivez le contexte de votre relance" }, { status: 400 });
     }
 
-    const content = await generateFollowUp({
-      fullName,
-      targetJob,
-      company,
-      applicationDate,
-      daysSince: Number(daysSince) || 7,
-      additionalContext: additionalContext || "",
-    });
+    const content = await generateFollowUp({ context, previousMessage });
 
     await Promise.all([
       supabase.from("generations").insert({
-        user_id: user.id,
-        type: "follow-up",
-        title: `Relance — ${targetJob} chez ${company}`,
-        input: body,
-        output: content,
+        user_id: user.id, type: "follow-up",
+        title: "Email de relance",
+        input: body, output: content,
       }),
       incrementGenerationCount(supabase, user.id),
     ]);
